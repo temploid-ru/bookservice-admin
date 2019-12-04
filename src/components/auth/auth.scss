@@ -1,0 +1,42 @@
+@import "./../../vars";
+
+.auth {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+
+  &__container {
+    border: 1px solid $grey-light;
+    padding: 2em 3em;
+    box-shadow: $base-box-shadow;
+  }
+
+
+
+  &__title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 1em;
+    text-align: center;
+  }
+
+  &__body {
+    margin-bottom: 1em;
+  }
+
+  &__form-control {
+    margin-bottom: 0.5em;
+
+    &:not(:last-child){
+      margin-bottom: 0.5em;
+    }
+
+    input {
+      border: 1px solid $grey-light;
+      padding: 0.5em 1.25em;
+    }
+  }
+}

@@ -1,0 +1,36 @@
+@import "./../../../../vars";
+
+.admin-edit-item {
+  border: 1px solid $grey-light;
+  padding: 0.5em 2em ;
+  display: grid;
+  grid-template-columns: auto 1fr 2em;
+  grid-gap: 1em;
+  align-items: center;
+  border-radius: $base-border-radius;
+
+  &__icon {
+    width: 2em;
+    height: 2em;
+    padding: 0.25em;
+    color: $grey;
+    cursor: pointer;
+    transition: 0.3s ease all;
+
+    &:hover {
+      color: $secondary-color;
+    }
+  }
+
+  input {
+    padding: 0.5em 1.25em;
+    border: 1px solid $grey-light;
+    outline: $secondary-color;
+
+    &[readonly] {
+      background-color: $grey-light;
+      outline: none;
+
+    }
+  }
+}

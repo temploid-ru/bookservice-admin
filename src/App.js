@@ -1,26 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import {connect} from 'react-redux';
+import Auth from "./components/auth";
+import Admin from "./components/admin";
+
+import './App.scss';
+
+function App(props) {
+    if (props.token !== null)
+        return (
+            <Auth/>
+        );
+    else return (
+        <Admin/>
+    );
 }
 
-export default App;
+const mapStateToProps = (state /*, ownProps*/) => {
+    return {
+        token: state.auth.token,
+    }
+};
+
+
+export default connect(mapStateToProps, null)(App);
+

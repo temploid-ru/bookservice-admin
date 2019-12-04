@@ -1,0 +1,16 @@
+@import "./../../../../vars";
+
+.admin-edit-tables-item {
+  display: table-row;
+
+  > div {
+
+  }
+
+  &__icon {
+    width: 1.5em;
+    height: 1.5em;
+    color: $grey;
+  }
+}
+
