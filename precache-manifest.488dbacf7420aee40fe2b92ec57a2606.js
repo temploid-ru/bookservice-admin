@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "37f6215aa1cb4213007854ce6083e360",
+    "revision": "5ce7bdad1d2c4857329946a954615aa7",
     "url": "/bookservice-admin/index.html"
   },
   {
-    "revision": "57935754994c81e5a73a",
-    "url": "/bookservice-admin/static/css/main.8a76d8a7.chunk.css"
+    "revision": "7ffbdcc7807ca1488b0c",
+    "url": "/bookservice-admin/static/css/main.6e70b2f1.chunk.css"
   },
   {
-    "revision": "14cd6f85e1dec0ee06ec",
-    "url": "/bookservice-admin/static/js/2.448374b8.chunk.js"
+    "revision": "a2a472da2852ad68deb0",
+    "url": "/bookservice-admin/static/js/2.9b60ff4a.chunk.js"
   },
   {
-    "revision": "57935754994c81e5a73a",
-    "url": "/bookservice-admin/static/js/main.ac4a5e8a.chunk.js"
+    "revision": "7ffbdcc7807ca1488b0c",
+    "url": "/bookservice-admin/static/js/main.d04ffe5a.chunk.js"
   },
   {
     "revision": "662d0dfa64965e7c4d14",
