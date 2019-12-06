@@ -10,7 +10,7 @@ import AdminAside from "./aside";
 function Admin() {
 
     return (
-        <Router>
+        <Router basename={window.location.pathname}>
             <div className="body">
 
                 <AdminAside/>
