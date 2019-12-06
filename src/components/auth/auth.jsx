@@ -8,7 +8,7 @@ function Auth(props) {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
 
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (token !== null) props.setToRedux(JSON.parse(token));
 
     return (
@@ -47,7 +47,7 @@ function saveAuthdata(json, dispatchAction) {
 }
 
 function setDataInLocal(json){
-    localStorage.setItem('token', JSON.stringify(json));
+    sessionStorage.setItem('token', JSON.stringify(json));
 }
 
 const mapDispatchToProps = dispatch => {
