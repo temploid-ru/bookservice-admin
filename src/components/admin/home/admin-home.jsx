@@ -1,43 +1,51 @@
-import React from 'react';
+import React, {useState} from 'react';
 import AdminHomeItem from "./item/";
 import './admin-home.scss';
 import AdminHomeEditWorkTime from "./edit-work-time";
+import {connect} from 'react-redux';
+import getDataFromServer, {updateCompanyInfo} from "./admin-home-container";
+import Preloader from "../../preloader";
+
+function AdminHome(props) {
+
+    const [companyInfo, setCompanyInfo] = useState({});
 
 
-function AdminHome() {
+    // because Object.entries(new Date()).length === 0;
+    // we have to do some additional check
+    if (Object.entries(companyInfo).length === 0 && companyInfo.constructor === Object) {
 
-    const items = [
-        {title: "Название заведения", value: "Тестовый текст"},
-        {title: "Адрес заведения", value: "Тестовый текст"},
-        {title: "Номер телефона", value: "Тестовый текст"},
-        {title: "Минимальное бронирование, час", value: "Тестовый текст"},
-    ];
+        getDataFromServer(props.token, setCompanyInfo);
+        return <Preloader/>
 
-    return (
-        <div className="admin-home">
-            <h1>Общие настройки</h1>
-            <div className="admin-home__items">
-                {
-                    items.map((item, key) => {
-                        let result;
-                        switch (item.componentName) {
-                            // case 'rengePicker':
-                            //     const a= 'a';
-                            //     break;
-                            case "datePicker":
-                                break;
-                            default :
-                                result = <AdminHomeItem key={key} {...item}/>
-                        }
-                        return result
-                    })
-                }
+    } else {
+        console.log('companyInfo',companyInfo.name);
+        return (
+            <div className="admin-home">
+                <h1>Общие настройки</h1>
+                <div className="admin-home__items">
 
-                <AdminHomeEditWorkTime/>
+                    <AdminHomeItem title={"Название заведения"} value={companyInfo.name}
+                                   changeHandler={value => updateCompanyInfo({...companyInfo, name:value},setCompanyInfo,props.token)}/>
 
+                    <AdminHomeItem title={"Адрес заведения"} value={companyInfo.address}/>
+                    <AdminHomeItem title={"Номер телефона"} value={companyInfo.phone}/>
+                    <AdminHomeItem title={"Минимальное бронирование, час"} value={companyInfo.bookingDuration}/>
+
+                    <AdminHomeEditWorkTime token={props.token}/>
+
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
+
+
 }
 
-export default AdminHome;
+const mapStateToProps = (state /*, ownProps*/) => {
+    return {
+        token: state.auth.token,
+    }
+};
+
+export default connect(mapStateToProps, null)(AdminHome);

@@ -12,8 +12,8 @@ function AdminHomeItem(props) {
     const icon = readOnly ? <SvgEdit/> : <SvgOk/>;
 
     function handlerClick() {
-        console.log('handlerClick', readOnly);
-        setReadOnly(!readOnly)
+        if (!readOnly) props.changeHandler(value);
+        setReadOnly(!readOnly);
     }
 
     return (
