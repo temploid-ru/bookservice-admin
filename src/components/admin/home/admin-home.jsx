@@ -1,6 +1,7 @@
 import React from 'react';
 import AdminHomeItem from "./item/";
 import './admin-home.scss';
+import AdminHomeEditWorkTime from "./edit-work-time";
 
 
 function AdminHome() {
@@ -31,6 +32,9 @@ function AdminHome() {
                         return result
                     })
                 }
+
+                <AdminHomeEditWorkTime/>
+
             </div>
         </div>
     )

@@ -7,7 +7,8 @@ import Admin from "./components/admin";
 import './App.scss';
 
 function App(props) {
-    if (props.token !== null)
+
+    if (props.token === null)
         return (
             <Auth/>
         );

@@ -2,12 +2,16 @@
 
 .admin-edit-item {
   border: 1px solid $grey-light;
-  padding: 0.5em 2em ;
+  padding: 0.5em;
   display: grid;
   grid-template-columns: auto 1fr 2em;
   grid-gap: 1em;
   align-items: center;
   border-radius: $base-border-radius;
+
+  @media screen and (min-width: 1500px){
+    padding: 0.5em 2em ;
+  }
 
   &__icon {
     width: 2em;

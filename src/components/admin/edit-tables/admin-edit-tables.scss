@@ -2,13 +2,64 @@
 
 .admin-edit-tables {
 
+  &__header {
+    position: fixed;
+    width: 100%;
+    background-color: $bg-grey;
+    border-bottom: 2px solid $grey-light;
+    text-align: center;
+  }
+
   &__items {
     width: 100%;
     text-align: center;
+    padding-top: 60px;
+  }
+
+  &__content {
+    height: calc(100vh - 4.5em);
+    overflow-y: scroll;
   }
 
 }
 
-.aet-cell {
+.aet-row {
+  display: flex;
 
+  *:not(:last-child){
+    padding: 0.25em;
+  }
+
+  &__table-number {
+    width: 70px;
+  }
+
+  &__table-name {
+    width:200px;
+  }
+
+  &__guests-count {
+    width: 70px;
+
+    input {
+      text-align: center;
+    }
+
+  }
+
+  &__deposit-count {
+    width: 120px;
+
+    input {
+      text-align: center;
+    }
+  }
+
+  &__photos {
+    width: 150px;
+  }
+
+  &__edit {
+    width: 2em;
+  }
 }

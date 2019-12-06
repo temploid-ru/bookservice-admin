@@ -12,5 +12,30 @@
     height: 1.5em;
     color: $grey;
   }
+
+  input {
+    width: 100%;
+    padding: 0.25em;
+    border: 1px solid $grey-light;
+
+    &[readonly] {
+      background-color: $bg-grey;
+      outline: none;
+    }
+  }
+
+  &__icon {
+    width: 2em;
+    height: 2em;
+    padding: 0.25em;
+    color: $grey;
+    cursor: pointer;
+    transition: 0.3s ease all;
+
+    &:hover {
+      color: $secondary-color;
+    }
+  }
+
 }
 

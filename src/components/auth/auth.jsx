@@ -1,12 +1,15 @@
 import React, {useState} from 'react';
 import './auth.scss';
 import {connect} from 'react-redux';
-import {AUTH__SET_DATA} from "../../constants";
+import {API_POINT, AUTH__SET_DATA} from "../../constants";
 
 function Auth(props) {
 
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
+
+    const token = localStorage.getItem('token');
+    if (token !== null) props.setToRedux(JSON.parse(token));
 
     return (
         <div className="auth">
@@ -23,12 +26,28 @@ function Auth(props) {
                 </div>
                 <div className="auth__submit">
                     <div className="btn btn--primary-color btn--block" role="button"
-                         onClick={() => props.setToRedux({token: 'getToken'})}>Авторизоваться
+                         onClick={() => authInServer({login,password}, props.setToRedux)}>Авторизоваться
                     </div>
                 </div>
             </div>
         </div>
     )
+}
+
+function authInServer(body,dispatchAction){
+    body['method'] = 'authorize';
+    fetch(API_POINT , {method: 'post', body: JSON.stringify(body)})
+        .then(res => res.json()).then(json => saveAuthdata(json,dispatchAction));
+}
+
+function saveAuthdata(json, dispatchAction) {
+    setDataInLocal(json);
+
+    dispatchAction(json);
+}
+
+function setDataInLocal(json){
+    localStorage.setItem('token', JSON.stringify(json));
 }
 
 const mapDispatchToProps = dispatch => {
