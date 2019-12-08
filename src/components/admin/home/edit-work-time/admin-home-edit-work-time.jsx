@@ -12,7 +12,7 @@ function AdminHomeEditWorkTime(props) {
 
     const editButton = readOnly ? <SvgEdit/> : <SvgOk/>;
 
-    const [workTime,setWorkTime] = useState([] );
+    // const [workTime,setWorkTime] = useState([] );
 
     return (
         <div className="admin-work-time">
@@ -33,7 +33,7 @@ function AdminHomeEditWorkTime(props) {
 
             <form action="" id="baseWorkTime" className="admin-work-time__body">
                 {
-                    workTime.map( (item,key) => <AdminHomeEditWorkDay
+                    props.workTimeList.map( (item,key) => <AdminHomeEditWorkDay
                         hoursVariants={hoursVariants}
                         minutesVariants={minutesVariants}
                         item={item}
