@@ -6,17 +6,19 @@ import AdminHome from "./home";
 
 import './admin.scss';
 import AdminAside from "./aside";
+import Hostes from "../hostes";
 
 function Admin() {
 
     return (
-        <Router basename={window.location.pathname}>
+        <Router>
             <div className="body">
 
                 <AdminAside/>
 
                 <main className="main">
                     <Switch>
+                        <Route path="/hostes"><Hostes/></Route>
                         <Route path="/edit-tables"><AdminEditTables/></Route>
                         <Route path="/"><AdminHome/></Route>
                     </Switch>

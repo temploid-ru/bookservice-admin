@@ -9,8 +9,6 @@ import getDataFromServer from "./admin-edit-tables-container";
 
 function AdminEditTables(props) {
 
-
-
     const [tablesList, setTablesList] = useState([]);
 
     if (tablesList.length === 0) {

@@ -20,6 +20,8 @@ function AdminAside() {
                     <li><Link to="/">Главная</Link></li>
                     <li><Link to="/edit-tables">Редактирование столов</Link></li>
                     <li><br/><br/><br/><br/></li>
+                    <li><Link to="/hostes">Модуль "Хостес"</Link></li>
+                    <li><br/><br/><br/><br/></li>
                     <li><a href="https://api.domoed.su:65480/mdDocs" target="_blank" rel="noopener noreferrer">Доки от методов (чтобы под рукой были)</a></li>
                 </ul>
             </div>

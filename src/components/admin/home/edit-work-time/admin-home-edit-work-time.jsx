@@ -12,14 +12,29 @@ function AdminHomeEditWorkTime(props) {
 
     const editButton = readOnly ? <SvgEdit/> : <SvgOk/>;
 
-    // const [workTime,setWorkTime] = useState([] );
+    const [workTimeList,setWorkTimeList] = useState(props.workTimeList);
+
+    function readOnlyChange(){
+
+        if (readOnly){
+            props.updateWorkTime(workTimeList);
+        }
+
+        setReadOnly(!readOnly)
+    }
+
+    function updateWorkTime(item,index){
+        let newWorkTimeList = [...workTimeList];
+        newWorkTimeList[index] = item;
+        setWorkTimeList(newWorkTimeList);
+    }
 
     return (
         <div className="admin-work-time">
             <div className="admin-work-time__header">
                 <div className="admin-work-time__title">
                     <div>Рабочее время заведения:</div>
-                    <div className="admin-work-time__icon" onClick={() => setReadOnly(!readOnly)}>
+                    <div className="admin-work-time__icon" onClick={() => readOnlyChange()}>
                         {editButton}
                     </div>
                 </div>
@@ -33,14 +48,14 @@ function AdminHomeEditWorkTime(props) {
 
             <form action="" id="baseWorkTime" className="admin-work-time__body">
                 {
-                    props.workTimeList.map( (item,key) => <AdminHomeEditWorkDay
+                    workTimeList.map((item, key) => <AdminHomeEditWorkDay
                         hoursVariants={hoursVariants}
                         minutesVariants={minutesVariants}
                         item={item}
                         disabled={readOnly}
                         key={key}
                         index={key}
-                        // changeHandler={obj =>updateWorkTime(obj)}
+                        updateWorkTime={item => updateWorkTime(item, key)}
                     />)
                 }
             </form>

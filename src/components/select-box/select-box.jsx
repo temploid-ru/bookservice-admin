@@ -5,6 +5,7 @@ export default function SelectBox(props) {
     const [value, setValue] = useState(props.currentValue);
 
     function changeHandler(value) {
+        props.changeHandler(value);
         setValue(value);
     }
 

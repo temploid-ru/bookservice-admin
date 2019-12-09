@@ -1,0 +1,11 @@
+@import "./../../../vars";
+
+.hostes-tables {
+  border: 1px solid $grey-light;
+  border-collapse: collapse;
+
+
+  th,td {
+    border: 1px solid $grey-light;
+  }
+}

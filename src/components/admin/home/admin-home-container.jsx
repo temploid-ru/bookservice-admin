@@ -33,3 +33,4 @@ function setDataToServer(companyInfo, token){
     fetch(API_POINT + "/companies", {method:'post',body:JSON.stringify(body)})
         .then(res=>res.json()).then(json=>console.log("companies update result", json));
 }
+

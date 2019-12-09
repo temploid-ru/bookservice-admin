@@ -19,6 +19,7 @@ function AdminHome(props) {
         return <Preloader/>
 
     } else {
+
         return (
             <div className="admin-home">
                 <h1>Общие настройки</h1>
@@ -31,7 +32,7 @@ function AdminHome(props) {
                     <AdminHomeItem title={"Номер телефона"} value={companyInfo.phone}/>
                     <AdminHomeItem title={"Минимальное бронирование, час"} value={companyInfo.bookingDuration}/>
 
-                    <AdminHomeEditWorkTime workTimeList={companyInfo.workdays}/>
+                    <AdminHomeEditWorkTime workTimeList={companyInfo.workdays} updateWorkTime={value => updateCompanyInfo({...companyInfo,workdays:value},setCompanyInfo,props.token)}/>
 
                 </div>
             </div>
