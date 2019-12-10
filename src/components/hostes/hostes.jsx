@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import moment from 'moment';
 import 'moment/locale/ru';
-import getTablesList, {generateWorkTimeGrid, getBookingInfo, setBooking} from "./hostes-container";
+import getTablesList, {generateWorkTimeGrid, getBookingInfo, getWorkTime, setBooking} from "./hostes-container";
 import HostesTablesList from "./tables-list/hostes-tables-list";
 import HostesOrder from "./new-order/hostes-new-order";
 import {API_POINT} from "../../constants";
@@ -16,14 +16,14 @@ function Hostes(props) {
     const [showDate, setShowDate] = useState(currentDate);
 
     //Время работы
-    const [worktime,setWorkTime] = useState(false);
-    if (!worktime){
-        getWorkTime(showDate,props.token);
+    const [workTime, setWorkTime] = useState(false);
+    if (!workTime) {
+        getWorkTime(showDate, setWorkTime, props.token);
     }
 
 
     // Сетка бронирования
-    const workTimeGrid = generateWorkTimeGrid(currentDate, 14400, 75600, 1800);
+    const workTimeGrid = generateWorkTimeGrid(currentDate, workTime.startTime, workTime.endTime, 1800);
 
     // Список столиков
     const [tablesList, setTablesList] = useState([]);
@@ -52,11 +52,10 @@ function Hostes(props) {
 
     if (newOrder) {
 
-        console.log('newOrder.cell.value', newOrder.cell.value);
-
-        const timeCode = moment(showDate).add(newOrder.cell.value, 's').format();
+        const timeCode = moment(newOrder.cell.value).format();
 
         return <HostesOrder
+            bookingId={newOrder.bookingId}
             tableId={newOrder.tableId}
             showDate={showDate}
             timeCode={timeCode}
@@ -67,10 +66,12 @@ function Hostes(props) {
         return (
             <div className="hostes">
                 <div className="hostes__header">
-                    <div className="left">
-                        <button>Назад</button>
-                        <div className="hostes__date">{moment(currentDate).format("D MMM YYYY")}</div>
-                        <button>Вперед</button>
+                    <div className="hostes__left">
+                        <div className="select-day">
+                            <button>Назад</button>
+                            <div className="hostes__date">{moment(currentDate).format("D MMM YYYY, dddd")}</div>
+                            <button>Вперед</button>
+                        </div>
                     </div>
 
                     <div className="right">

@@ -2,9 +2,9 @@ import React from 'react';
 
 import {connect} from 'react-redux';
 import Auth from "./components/auth";
-import Admin from "./components/admin";
 
 import './App.scss';
+import ProjectsRouter from "./components/projects-router";
 
 function App(props) {
 
@@ -13,7 +13,7 @@ function App(props) {
             <Auth/>
         );
     else return (
-        <Admin/>
+        <ProjectsRouter/>
     );
 }
 

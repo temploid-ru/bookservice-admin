@@ -4,6 +4,9 @@ import SelectBox from "../../../../select-box";
 
 function AdminHomeEditWorkDay(props) {
 
+    console.log(props);
+
+
     let {item} = props;
 
     let startTime = moment.utc(props.item.start_time * 1000).format('HH:mm:ss');
@@ -12,6 +15,7 @@ function AdminHomeEditWorkDay(props) {
     let endTime = moment.utc(props.item.end_time * 1000).format('HH:mm:ss');
     endTime = endTime.split(':');
 
+    const weekText = props.dayNameText[props.item.weekday-1];
 
     function update(obj) {
         obj.startTime = 3600 * parseInt(obj.startTime[0]) + 60 * parseInt(obj.startTime[1]) + parseInt(obj.startTime[2]);
@@ -26,8 +30,8 @@ function AdminHomeEditWorkDay(props) {
 
 
     return (
-        <div className="admin-work-time__item" key={item.title}>
-            <div className="admin-work-time__day-name">{item.title}</div>
+        <div className="admin-work-time__item" key={weekText}>
+            <div className="admin-work-time__day-name">{weekText}</div>
             <div className="admin-work-time__value">
                 <span>c</span>
                 <SelectBox values={props.hoursVariants} currentValue={startTime[0]} disabled={props.disabled}

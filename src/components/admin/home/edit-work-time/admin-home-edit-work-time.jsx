@@ -4,7 +4,7 @@ import {SvgCalendar, SvgEdit, SvgOk} from "../../../../assets/svg";
 import './admin-home-edit-work-time.scss';
 import AdminHomeEditWorkDay from "./edit-work-day";
 
-import {hoursVariants, minutesVariants} from "./admin-home-edit-work-time-container";
+import {hoursVariants, minutesVariants,dayNameText} from "./admin-home-edit-work-time-container";
 
 function AdminHomeEditWorkTime(props) {
 
@@ -49,6 +49,7 @@ function AdminHomeEditWorkTime(props) {
             <form action="" id="baseWorkTime" className="admin-work-time__body">
                 {
                     workTimeList.map((item, key) => <AdminHomeEditWorkDay
+                        dayNameText={dayNameText}
                         hoursVariants={hoursVariants}
                         minutesVariants={minutesVariants}
                         item={item}

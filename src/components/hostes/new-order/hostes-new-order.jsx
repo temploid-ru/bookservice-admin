@@ -5,6 +5,7 @@ import moment from "moment";
 
 export default function HostesOrder(props) {
 
+    console.log('props',props);
 
     //Имя посетителя
     const [clientName, setClientName] = useState(props.name || '');
