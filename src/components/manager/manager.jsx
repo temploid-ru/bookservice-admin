@@ -1,42 +1,35 @@
-import React, {useState, useEffect} from 'react';
-import {API_POINT} from "../../constants";
+import React, {useState} from 'react';
 import {connect} from "react-redux";
 import Preloader from "../preloader";
-import {getCompanyInfo} from "./manager-container";
+import {getCompanyInfo, getWorkTime, getTablesList} from "./manager-container";
 import moment from "moment";
+import ManagerWebsocket from "./websocket/manager-websocket";
 
 function Manager(props) {
 
     const [showDate, setShowDate] = useState(moment().startOf('day').toISOString());
 
-    const [info, setInfo] = useState({});
+    const [info, setInfo] = useState({preloader:true});
 
-    useEffect(()=>{
-        console.log('componentDidMount');
-    });
-
-
-    if (Object.entries(info).length === 0 && info.constructor === Object) {
-
+    if (info.preloader === true) {
         const arFetchFunctions = [
-            getCompanyInfo(props.token) //Получаем данные о компании
+            getCompanyInfo(props.token), //Получаем данные о компании
+            getWorkTime(showDate, props.token), //Получаем время работы
+            getTablesList(showDate, props.token), // Получаем данные о столах
         ];
-
         Promise.all(arFetchFunctions)
-            .then(([companyInfo]) => setInfo({companyInfo}));
-
-
+            .then(([
+                       companyInfo,
+                       workTime,
+                       tablesList,
+                   ]) => setInfo({
+                companyInfo,
+                workTime,
+                tablesList,
+            }));
         return <Preloader/>
-
     } else {
-
-        console.log('companyInfo', info);
-
-        return (
-            <div>
-                Manager
-            </div>
-        )
+        return <ManagerWebsocket {...info} token={props.token}/>
     }
 
 
