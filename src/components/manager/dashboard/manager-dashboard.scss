@@ -1,0 +1,98 @@
+@import "./../../../vars";
+
+.search-button {
+  margin:15px;
+  border: 1px solid #DBDBDB;
+  border-radius: 45px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  padding: 12px;
+  grid-gap: 17px;
+  text-decoration: none;
+
+  &__icon {
+    width: 20px;
+    height: 20px;
+    color: #6A6A6A;
+  }
+
+  &__text {
+    color: #6A6A6A;
+  }
+
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-gap: 36px;
+  margin: 15px;
+
+  &__button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #F0F0F0;
+  }
+
+  &__icon {
+    width: 20px;
+    height: 20px;
+    color: black;
+  }
+
+  &__body {
+    background-color: #F0F0F0;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+  }
+
+  &__text {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    color: #000;
+    margin-right: 10px;
+  }
+}
+
+.new-order {
+  &__button {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    background-color: $primary-color;
+    border-radius: 50%;
+
+
+    @mixin _plus($rotate){
+      display: block;
+      content: '';
+      position: absolute;
+      width: 2px;
+      height: 20px;
+      background: #FFFFFF;
+      border-radius: 1px;
+      left: 50%;
+      top:50%;
+      transform: translate(-50%, -50%) rotateZ($rotate);
+    }
+
+    &:before {
+      @include _plus(0);
+    }
+
+    &:after {
+      @include _plus(90deg);
+    }
+  }
+}

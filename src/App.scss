@@ -1,13 +1,16 @@
 @import "~normalize.css";
 
 @import "~roboto-fontface";
+@import "~typeface-roboto-slab";
+
 
 @import "vars";
 
 body {
   font-family: "Roboto", sans-serif;
-  font-size: 16px;
-  line-height: 1.4286;
+  font-size: 17px;
+  line-height: 20px;
+  color: #C4C4C4;
 
   * {
     box-sizing: border-box;

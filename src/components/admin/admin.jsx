@@ -18,9 +18,9 @@ function Admin() {
 
                 <main className="main">
                     <Switch>
-                        <Route path="/hostes"><Hostes/></Route>
-                        <Route path="/edit-tables"><AdminEditTables/></Route>
-                        <Route path="/"><AdminHome/></Route>
+                        <Route path="/admin/hostes"><Hostes/></Route>
+                        <Route path="/admin/edit-tables"><AdminEditTables/></Route>
+                        <Route path="/admin/"><AdminHome/></Route>
                     </Switch>
                 </main>
             </div>

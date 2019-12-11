@@ -17,10 +17,10 @@ function AdminAside() {
             <div className="aside__container">
                 <div className="aside__title">Панель навигации</div>
                 <ul className="aside__menu">
-                    <li><Link to="/">Главная</Link></li>
-                    <li><Link to="/edit-tables">Редактирование столов</Link></li>
+                    <li><Link to="/admin/">Главная</Link></li>
+                    <li><Link to="/admin/edit-tables">Редактирование столов</Link></li>
                     <li><br/><br/><br/><br/></li>
-                    <li><Link to="/hostes">Модуль "Хостес"</Link></li>
+                    <li><Link to="/admin/hostes">Модуль "Хостес"</Link></li>
                     <li><br/><br/><br/><br/></li>
                     <li><a href="https://api.domoed.su:65480/mdDocs" target="_blank" rel="noopener noreferrer">Доки от методов (чтобы под рукой были)</a></li>
                 </ul>

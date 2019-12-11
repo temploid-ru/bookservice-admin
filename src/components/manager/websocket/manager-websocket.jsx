@@ -1,19 +1,20 @@
 import React from 'react';
 import {WEBSOKET_PONT} from "../../../constants";
-import ManagerDashboard from "../dashboard/";
 import Preloader from "../../preloader";
+import {connect} from 'react-redux';
+import {BOOKING__SET_DATA} from "../../../constants/manager";
+import ManagerMain from "../main/manager-main";
 
 /**
  * Подключаем вэбсокеты чтобы слушать заказы на бронь
  */
-export default class ManagerWebsocket extends React.Component {
+class ManagerWebsocket extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
             ws: null,
-            bookingInfo: null
         };
     }
 
@@ -52,8 +53,8 @@ export default class ManagerWebsocket extends React.Component {
         ws.onmessage = evt => {
             // listen to data sent from the websocket server
             const message = JSON.parse(evt.data);
-
-            if (message.items !== undefined) this.setState({bookingInfo: message.items})
+            // console.log('message',message);
+            if (message.items !== undefined ) this.props.setToRedux(message.items)
         }
 
         // websocket onclose event listener
@@ -87,15 +88,28 @@ export default class ManagerWebsocket extends React.Component {
      */
     check = () => {
         const {ws} = this.state;
-        if (!ws || ws.readyState == WebSocket.CLOSED) this.connect(); //check if websocket instance is closed, if so call `connect` function.
+        if (!ws || ws.readyState === WebSocket.CLOSED) this.connect(); //check if websocket instance is closed, if so call `connect` function.
     };
 
     render() {
         if (this.state.bookingInfo === null) {
             return <Preloader/>
         } else {
-            return <ManagerDashboard {...this.props} bookingInfo={this.state.bookingInfo}/>
+            return <ManagerMain/>
         }
     }
-
 }
+
+const mapStateToProps = (state /*, ownProps*/) => {
+    return {
+        token: state.auth.token,
+    }
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setToRedux: payload => dispatch({type: BOOKING__SET_DATA, payload})
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManagerWebsocket);
