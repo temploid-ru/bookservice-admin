@@ -25,26 +25,17 @@ export function getTableGrid(props) {
 
     const workTimeLine = generateWorkTimeGrid(workTime, showDate, props.bookingInterval);
 
-    console.log('workTimeLine',workTimeLine);
-
     const bookingInfo = prepareBookingInfo(props.bookingInfo);
-
-    console.log('workTimeLine', workTimeLine);
-    console.log('bookingInfo-------------------------------------------------------------', bookingInfo);
 
     for (let table of props.tablesList) {
 
-        let flag = false;
-
         //TODO разобраться почему не копируется а заменяется объект потому пока костыль
-
         // let timeline = {...workTimeLine, id:table.id};
         // const timeline = Object.assign({'id':table.id},workTimeLine);
-        const timeline = JSON.parse(JSON.stringify(workTimeLine));
+        const timeline = JSON.parse(workTimeLine);
 
 
         if (bookingInfo[table.id] !== undefined) {
-            flag = true;
 
             for (let booking of bookingInfo[table.id].bookings) {
 
@@ -76,56 +67,7 @@ export function getTableGrid(props) {
 
         result.push({...gridItem});
 
-        // timeline = {};
-
-
-
-        // const gridItem = {
-        //     tableId: table.id,
-        //     tableName: table.name,
-        //     tableNumber: table.number,
-        //     cells: {...workTimeLine}, // ячейки рабочего времени
-        // };
-
-        // let flag = false;
-
-        //Добавляем к ячейкам информацию о заказе
-        // if (bookingInfo[table.id] !== undefined) {
-        //
-        //     flag = true;
-        //
-        //     for (let booking of bookingInfo[table.id].bookings) {
-        //         console.log(table.id + ' booking');
-        //         // //удаляем из таймлайна стола объедененные ячейки
-        //
-        //         const startCell = +moment(booking.dateStart).format('x');
-        //         let deleteFrom = +moment(booking.dateStart).add(props.bookingInterval, 's').format('x');
-        //         const deleteTo = +moment(booking.dateEnd).format('x');
-        //
-        //         const step = props.bookingInterval * 1000;
-        //
-        //         let gridSpan = 1;
-        //
-        //         while (deleteFrom <= deleteTo) {
-        //             gridSpan++;
-        //         //
-        //             delete gridItem.cells[deleteFrom];
-        //             deleteFrom += step;
-        //         }
-        //
-        //         gridItem.cells[startCell].gridSpan = gridSpan;
-        //     }
-        // }
-        //
-        // if (flag) {
-        //     console.log('gridItem', timeline);
-        // }
-
-        // result.push({...gridItem});
     }
-
-    console.log('getTableGrid', result);
-
     return result;
 }
 
@@ -173,5 +115,5 @@ export function generateWorkTimeGrid(workTime, activeDate, gridStep) {
         startTime += gridStep;
     }
 
-    return result;
+    return JSON.stringify(result);
 }

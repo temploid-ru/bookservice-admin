@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 
-function ManagerNewOrder() {
+function ManagerOrderEdit() {
     return(
         <div>
             ManagerNewOrder
@@ -10,4 +10,4 @@ function ManagerNewOrder() {
     )
 }
 
-export default ManagerNewOrder;
+export default ManagerOrderEdit;

@@ -1,0 +1,151 @@
+@import "./../../../vars";
+
+.order-info {
+  padding-top: 24px;
+  padding-bottom: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &__status {
+    font-size: 13px;
+    line-height: 15px;
+    color: white;
+    border-radius: 15px;
+    padding: 4px 10px;
+    margin-bottom: 10px;
+
+    .is-locked & {
+      background-color: #FFB629;
+    }
+
+    .is-booked & {
+      background-color: #00B2FF;
+    }
+
+    .is-arrived & {
+      background-color: #1EC025;
+    }
+  }
+
+  &__name {
+    font-family: "Roboto Slab",serif;
+    font-size: 25px;
+    line-height: 33px;
+    margin-bottom: 8px;
+    color: #000000;
+  }
+
+  &__phone {
+    color: #000000;
+    margin-bottom: 8px;
+  }
+
+  &__count-guests{
+    font-size: 15px;
+    line-height: 18px;
+    color: #6A6A6A;
+    margin-bottom: 54px;
+  }
+
+  &__date {
+    color: #000000;
+    margin-bottom: 8px;
+  }
+
+  &__time {
+    color: #000000;
+    margin-bottom: 8px;
+  }
+
+  &__table-number {
+    color: #000000;
+    margin-bottom: 30px;
+  }
+
+  &__deposit {
+    margin-bottom: 32px;
+
+    &.has-deposit {
+      font-weight: 500;
+      font-size: 25px;
+      line-height: 29px;
+      color: #000000;
+    }
+
+    &.not-has-deposit {
+      font-size: 15px;
+      line-height: 18px;
+      color: #6A6A6A;
+    }
+  }
+
+  &__footer-block {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 190px;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-gap: 51px 11px;
+    background-color: white;
+    padding: 15px;
+    z-index: 1;
+  }
+
+  &__icon {
+    width: 20px;
+    height: 20px;
+    margin: 0 auto 8px;
+    color: black;
+
+    .order-info__status-color & {
+      color: white;
+    }
+  }
+
+  &__btn {
+    background: #F0F0F0;
+    border-radius: 5px;
+    padding-top: 15px;
+    padding-bottom: 13px;
+    text-align: center;
+
+    &.order-info__status-color {
+      .is-locked & {
+        background-color: #FFB629;
+      }
+
+      .is-booked & {
+        background-color: #00B2FF;
+      }
+
+      .is-arrived & {
+        background-color: #1EC025;
+      }
+    }
+  }
+
+  &__text {
+    font-size: 13px;
+    line-height: 15px;
+    font-weight: 500;
+    color: #000000;
+
+    .order-info__status-color & {
+      color: white;
+    }
+  }
+
+  &__back {
+    grid-column: 1/4;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+    color: #000000;
+  }
+}

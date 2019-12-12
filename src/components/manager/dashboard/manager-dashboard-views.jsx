@@ -60,7 +60,7 @@ export function TableGridRow(props) {
 
     return (
         <tr>
-            <td>{props.tableNumber}</td>
+            <td className="table-number">{props.tableNumber}</td>
             {cells}
         </tr>
     )
@@ -91,10 +91,10 @@ export function TableGridCell(props) {
 
         info.bookedText = props.bookingInfo.numGuests;
 
-        info.body = <div className={"gantt " + info.statusClass}>
+        info.body = <Link to={"/manager/order-info/" + props.bookingInfo.id} className={"gantt " + info.statusClass}>
             <div className="gantt__icon"><SvgGuest/></div>
             <div className="gantt__text">{info.bookedText}</div>
-        </div>
+        </Link>
     } else {
         info.body = null;
     }
@@ -107,7 +107,7 @@ export function TableGridCell(props) {
 export function NewOrder() {
     return (
         <div className="new-order">
-            <Link to={"/manager/new-order/"} className="new-order__button"/>
+            <Link to={"/manager/order-edit/"} className="new-order__button"/>
         </div>
     )
 }

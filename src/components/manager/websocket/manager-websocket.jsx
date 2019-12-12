@@ -3,7 +3,7 @@ import {WEBSOKET_PONT} from "../../../constants";
 import Preloader from "../../preloader";
 import {connect} from 'react-redux';
 import {BOOKING__SET_DATA} from "../../../constants/manager";
-import ManagerMain from "../main/manager-main";
+import ManagerRouter from "../router/manager-router";
 
 /**
  * Подключаем вэбсокеты чтобы слушать заказы на бронь
@@ -95,7 +95,7 @@ class ManagerWebsocket extends React.Component {
         if (this.state.bookingInfo === null) {
             return <Preloader/>
         } else {
-            return <ManagerMain/>
+            return <ManagerRouter/>
         }
     }
 }
