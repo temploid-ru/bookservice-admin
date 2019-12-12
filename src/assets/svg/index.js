@@ -50,4 +50,11 @@ export const SvgCalendar = () => <svg viewBox="0 0 20 20" fill="none" xmlns="htt
           fill="currentColor"/>
 </svg>
 
-
+export const SvgGuest = () => <svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M7.00007 3C7.00007 4.10457 6.10464 5 5.00007 5C3.8955 5 3.00007 4.10457 3.00007 3C3.00007 1.89543 3.8955 1 5.00007 1C6.10464 1 7.00007 1.89543 7.00007 3Z"
+        fill="currentColor"/>
+    <path
+        d="M8.89314 8.50696C9.01854 9.04482 8.55236 9.5 8.00007 9.5H2.00007C1.44779 9.5 0.981611 9.04482 1.10701 8.50696C1.54667 6.62114 3.27337 6 5.00007 6C6.72678 6 8.45348 6.62115 8.89314 8.50696Z"
+        fill="currentColor"/>
+</svg>

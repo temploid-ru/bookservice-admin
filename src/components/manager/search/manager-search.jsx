@@ -9,7 +9,7 @@ import {searchOrders} from "./manager-search-container";
 
 function ManagerSearch(props) {
 
-    const [searchText, setSearchText] = useState('e');
+    const [searchText, setSearchText] = useState('');
 
     const items = searchOrders(searchText,props.bookingInfo);
 

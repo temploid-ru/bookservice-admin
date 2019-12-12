@@ -96,3 +96,22 @@
     }
   }
 }
+
+.dashboard {
+  width: 100%;
+  border: 1px solid #DBDBDB;
+  border-collapse: collapse;
+
+  td {
+    border: 1px solid #DBDBDB;
+
+    &:nth-child(2n){
+      background: #F3F3F3;
+    }
+  }
+}
+
+.gantt {
+  margin: 1px;
+
+}

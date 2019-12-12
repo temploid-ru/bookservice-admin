@@ -1,13 +1,14 @@
 import React from 'react';
+import {connect} from 'react-redux';
 
 import {Calendar, NewOrder, SearchButton, TableGrid} from "./manager-dashboard-views";
 
 import './manager-dashboard.scss';
 import {getTableGrid} from "./manager-dashboard-container";
 
-export default function ManagerDashboard(){
+function ManagerDashboard(props){
 
-    const tableGrid =  getTableGrid();
+    const tableGrid =  getTableGrid(props);
 
     return (
         <div>
@@ -15,7 +16,7 @@ export default function ManagerDashboard(){
 
             <Calendar text={'Сегодня • 14 сен, ср'} changeDay={value=>console.log('changeDay',value)}/>
 
-            <TableGrid {...tableGrid}/>
+            <TableGrid items={tableGrid}/>
 
             <NewOrder/>
 
@@ -24,3 +25,14 @@ export default function ManagerDashboard(){
     )
 }
 
+const mapStateToProps = (state /*, ownProps*/) => {
+    return {
+        bookingInfo: state.bookingInfo,
+        bookingInterval:state.info.companyInfo.bookingInterval,
+        tablesList: state.info.tablesList,
+        workTime: state.info.workTime,
+        showDate: state.showDate,
+    }
+};
+
+export default connect(mapStateToProps,null)(ManagerDashboard);
