@@ -6,7 +6,6 @@ import AdminHome from "./home";
 
 import './admin.scss';
 import AdminAside from "./aside";
-import Hostes from "../hostes";
 
 function Admin() {
 
@@ -18,7 +17,6 @@ function Admin() {
 
                 <main className="main">
                     <Switch>
-                        <Route path="/admin/hostes"><Hostes/></Route>
                         <Route path="/admin/edit-tables"><AdminEditTables/></Route>
                         <Route path="/admin/"><AdminHome/></Route>
                     </Switch>
