@@ -54,7 +54,7 @@ class ManagerWebsocket extends React.Component {
             // listen to data sent from the websocket server
             const message = JSON.parse(evt.data);
             // console.log('message',message);
-            if (message.items !== undefined ) this.props.setToRedux(message.items)
+            if (message.items !== undefined ) this.props.setToRedux(message)
         }
 
         // websocket onclose event listener
@@ -91,8 +91,9 @@ class ManagerWebsocket extends React.Component {
         if (!ws || ws.readyState === WebSocket.CLOSED) this.connect(); //check if websocket instance is closed, if so call `connect` function.
     };
 
+
     render() {
-        if (this.state.bookingInfo === null) {
+        if (this.props.bookingInfo === null) {
             return <Preloader/>
         } else {
             return <ManagerRouter/>
@@ -103,6 +104,7 @@ class ManagerWebsocket extends React.Component {
 const mapStateToProps = (state /*, ownProps*/) => {
     return {
         token: state.auth.token,
+        bookingInfo:state.bookingInfo
     }
 };
 

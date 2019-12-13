@@ -66,4 +66,9 @@ export const SvgDelete = () => <svg viewBox="0 0 20 20" fill="none" xmlns="http:
           fill="currentColor"/>
 </svg>
 
+export const SvgSelectBoxArrow = () => <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M2.55768 5C1.64737 5 1.2105 6.11736 1.8794 6.7348L5.82175 10.3739C6.20481 10.7275 6.79524 10.7275 7.17831 10.3739L11.1207 6.7348C11.7896 6.11736 11.3527 5 10.4424 5H2.55768Z"
+        fill="currentColor"/>
+</svg>
 

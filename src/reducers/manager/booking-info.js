@@ -5,7 +5,7 @@ const initialState = null;
 export default function bookingInfo(state = initialState, action) {
     switch (action.type) {
         case BOOKING__SET_DATA:
-            return [...action.payload];
+            return {...action.payload};
         default:
             return state;
     }

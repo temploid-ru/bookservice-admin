@@ -86,7 +86,7 @@ function ManagerOrderInfo(props) {
 
 const mapStateToProps = (state /*, ownProps*/) => {
     return {
-        bookingInfo: state.bookingInfo
+        bookingInfo: state.bookingInfo.items
     }
 };
 

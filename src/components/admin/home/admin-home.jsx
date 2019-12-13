@@ -28,9 +28,15 @@ function AdminHome(props) {
                     <AdminHomeItem title={"Название заведения"} value={companyInfo.name}
                                    changeHandler={value => updateCompanyInfo({...companyInfo, name:value},setCompanyInfo,props.token)}/>
 
-                    <AdminHomeItem title={"Адрес заведения"} value={companyInfo.address}/>
-                    <AdminHomeItem title={"Номер телефона"} value={companyInfo.phone}/>
-                    <AdminHomeItem title={"Минимальное бронирование, час"} value={companyInfo.bookingDuration}/>
+                    <AdminHomeItem title={"Адрес заведения"} value={companyInfo.address}
+                                   changeHandler={value => updateCompanyInfo({...companyInfo, address:value},setCompanyInfo,props.token)}
+                    />
+                    <AdminHomeItem title={"Номер телефона"} value={companyInfo.phone}
+                                   changeHandler={value => updateCompanyInfo({...companyInfo, phone:value},setCompanyInfo,props.token)}
+                    />
+                    <AdminHomeItem title={"Минимальное бронирование, час"} value={companyInfo.bookingDuration}
+                                   changeHandler={value => updateCompanyInfo({...companyInfo, bookingDuration: +value},setCompanyInfo,props.token)}
+                    />
 
                     <AdminHomeEditWorkTime workTimeList={companyInfo.workdays} updateWorkTime={value => updateCompanyInfo({...companyInfo,workdays:value},setCompanyInfo,props.token)}/>
 

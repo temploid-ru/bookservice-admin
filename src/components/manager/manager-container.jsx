@@ -17,7 +17,15 @@ export function getCompanyInfo(token) {
     return fetch(API_POINT + '/companies', {
         method: 'post',
         body: JSON.stringify(body)
-    }).then(r => r.json()).then(json => json.items[0]);
+    }).then(r => r.json()).then(json => {
+        if (json.error) {
+            console.error(json.error_message);
+            return null;
+        } else {
+            return(json.items[0]);
+        }
+
+    });
 
 }
 
@@ -26,7 +34,7 @@ export function getCompanyInfo(token) {
  *
  * @param date
  * @param token
- * @return array
+ * @return Promise<{startTime: number, endTime: number}>
  */
 export function getWorkTime(date, token) {
 

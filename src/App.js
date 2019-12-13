@@ -6,7 +6,13 @@ import Auth from "./components/auth";
 import './App.scss';
 import ProjectsRouter from "./components/projects-router";
 
+// ставим локаль moment.js для всего проекта
+import 'moment/locale/ru';
+import moment from "moment";
+
 function App(props) {
+    // ставим локаль moment.js для всего проекта
+    moment.locale('ru');
 
     if (props.token === null)
         return (
