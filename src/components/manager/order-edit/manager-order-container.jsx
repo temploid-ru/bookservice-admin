@@ -14,7 +14,7 @@ export function defineOrderData(props, orderInfo, tableId) {
         duration: 2,
         date: props.showDate.currentDate,
         guests: 2,
-        table: false,
+        table: '5db8169290b63cd40c7144fb',
         clientName: "",
         clientPhone: "",
         deposit: false,
@@ -175,5 +175,8 @@ export function saveOrder(order, token) {
     }
 
     fetch(API_POINT + "/bookings", {method: 'post', body: JSON.stringify(body)})
-        .then(r => r.json()).then(json => console.log('json response', json));
+        .then(r => r.json()).then(json => {
+            alert('Данные сохранены, сделать popUp');
+        console.log('json response', json)
+    });
 }

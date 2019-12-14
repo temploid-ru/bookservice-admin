@@ -26,9 +26,15 @@ export function getTableGrid(props) {
 
     const workTimeLine = generateWorkTimeGrid(workTime, showDate, props.bookingInterval);
 
-    const bookingInfo = prepareBookingInfo(props.bookingInfo);
+    console.log('workTimeLine',workTimeLine);
+
+    const {bookingInfo} = props;
+
+    console.log('bookingInfo', bookingInfo);
 
     for (let table of props.tablesList) {
+
+        const orderItems = bookingInfo.filter(item => item.tableID === table.id);
 
         //TODO разобраться почему не копируется а заменяется объект потому пока костыль
         // let timeline = {...workTimeLine, id:table.id};
@@ -36,27 +42,26 @@ export function getTableGrid(props) {
         const timeline = JSON.parse(workTimeLine);
 
 
-        if (bookingInfo[table.id] !== undefined) {
+        for (let booking of orderItems) {
 
-            for (let booking of bookingInfo[table.id].bookings) {
+            const startCell = +moment(booking.dateStart).format('x');
+            let deleteFrom = +moment(booking.dateStart).add(props.bookingInterval, 's').format('x');
+            const deleteTo = +moment(booking.dateEnd).format('x');
 
-                const startCell = +moment(booking.dateStart).format('x');
-                let deleteFrom = +moment(booking.dateStart).add(props.bookingInterval, 's').format('x');
-                const deleteTo = +moment(booking.dateEnd).format('x');
+            const step = props.bookingInterval * 1000;
 
-                const step = props.bookingInterval * 1000;
+            let gridSpan = 1;
 
-                let gridSpan = 1;
-
-                while (deleteFrom <= deleteTo) {
-                    delete timeline[deleteFrom];
-                    gridSpan++;
-                    deleteFrom += step;
-                }
-
-                timeline[startCell].gridSpan = gridSpan;
-                timeline[startCell].bookingInfo = booking;
+            while (deleteFrom <= deleteTo) {
+                delete timeline[deleteFrom];
+                gridSpan++;
+                deleteFrom += step;
             }
+
+            timeline[startCell].gridSpan = gridSpan;
+            timeline[startCell].bookingInfo = booking;
+
+            console.log('timeline', timeline);
         }
 
         const gridItem = {
@@ -68,26 +73,6 @@ export function getTableGrid(props) {
 
         result.push({...gridItem});
 
-    }
-    return result;
-}
-
-/**
- * Переконвертируем инфо о бронировании
- *
- *
- *
- * @param bookingInfo
- * @return {{}}
- */
-function prepareBookingInfo(bookingInfo) {
-    const result = {};
-
-    if (bookingInfo !== null) {
-
-        for (let table of bookingInfo) {
-            result[table.id] = table;
-        }
     }
     return result;
 }
@@ -133,7 +118,7 @@ export const getActiveDayText = (showDate) => {
 };
 
 export function updateActiveDate(showDate, newValue, setStateAction) {
-    const activeDate = moment(showDate.activeDate).add(newValue,'d').format();
+    const activeDate = moment(showDate.activeDate).add(newValue, 'd').format();
 
     setStateAction({...showDate, activeDate})
 

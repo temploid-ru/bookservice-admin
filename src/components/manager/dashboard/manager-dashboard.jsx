@@ -6,8 +6,11 @@ import {Calendar, NewOrder, SearchButton, TableGrid} from "./manager-dashboard-v
 import './manager-dashboard.scss';
 import {getActiveDayText, getTableGrid, updateActiveDate} from "./manager-dashboard-container";
 import {SHOW_DATE__SET} from "../../../constants/manager";
+import moment from "moment";
 
 function ManagerDashboard(props) {
+
+    console.log('ManagerDashboard',props);
 
 
     return (
@@ -16,6 +19,7 @@ function ManagerDashboard(props) {
 
             <Calendar text={getActiveDayText(props.showDate)}
                       changeDay={value => updateActiveDate(props.showDate, value, props.setDate)}/>
+
             <TableGrid items={getTableGrid(props)}/>
             <NewOrder/>
         </div>
@@ -23,8 +27,15 @@ function ManagerDashboard(props) {
 }
 
 const mapStateToProps = (state /*, ownProps*/) => {
+
+    const {activeDate} = state.showDate;
+
+    const bookingInfo = (moment(activeDate)  < moment(state.showDate.currentDate))
+        ? []
+        : state.bookingInfo.itemsx[moment(activeDate).format('YYYY-MM-DD')];
+
     return {
-        bookingInfo: state.bookingInfo.items,
+        bookingInfo: bookingInfo,
         bookingInterval: state.info.companyInfo.bookingInterval,
         tablesList: state.info.tablesList,
         workTime: state.info.workTime,
