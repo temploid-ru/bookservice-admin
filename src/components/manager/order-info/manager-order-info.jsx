@@ -1,50 +1,15 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {declOfNum, getBookingStatus} from "../utils/utils";
 import {SvgDelete, SvgEdit, SvgOk} from "../../../assets/svg";
 import {Link} from 'react-router-dom';
 import moment from "moment";
 import './manager-order-info.scss';
+import {deleteOrder, prepareBookingInfo} from "./manager-order-info-controller";
 
 function ManagerOrderInfo(props) {
     const {orderId} = props.match.params;
 
-    let bookingInfo = {};
-
-    for (let table of props.bookingInfo) {
-        for (let bookingItem of table.bookings) {
-            if (bookingItem.id === orderId) {
-                bookingInfo = {...bookingItem};
-                bookingInfo.tableNumber = table.number;
-                bookingInfo.tableId = table.id;
-            }
-        }
-    }
-
-    if (bookingInfo.deposit > 0) {
-        bookingInfo.depositText = bookingInfo.deposit + ' ₽';
-        bookingInfo.depositClass = 'has-deposit';
-    } else {
-        bookingInfo.depositText = 'Без депозита';
-        bookingInfo.depositClass = 'not-has-deposit';
-    }
-
-    //TODO - сделать формирование текущей даты
-    bookingInfo.dateText = 'Сегодня • 14 сен, среда';
-
-    bookingInfo.timeText = moment(bookingInfo.dateStart).format("HH:mm") + ' - ' + moment(bookingInfo.dateEnd).format("HH:mm");
-
-    bookingInfo.status = getBookingStatus(bookingInfo.status);
-
-    bookingInfo.numGuests = bookingInfo.numGuests + declOfNum(bookingInfo.numGuests, [" гость", ' гостя', ' гостей']);
-
-
-    bookingInfo.status.buttonText = (bookingInfo.status.buttonText)
-        ? <div className="order-info__btn order-info__status-color">
-            <div className="order-info__icon"><SvgOk/></div>
-            <div className="order-info__text">{bookingInfo.status.buttonText}</div>
-        </div>
-        : null;
+    const bookingInfo = prepareBookingInfo(props.order, props.table, props.showDate);
 
     return (
         <div className={"order-info " + bookingInfo.status.statusClass}>
@@ -66,7 +31,7 @@ function ManagerOrderInfo(props) {
 
                 <div className="order-info__btn">
                     <div className="order-info__icon"><SvgDelete/></div>
-                    <div className="order-info__text">Удалить</div>
+                    <div className="order-info__text" onClick={()=>deleteOrder(bookingInfo.id, props.token)}>Удалить</div>
                 </div>
                 <Link to="/manager/" className="order-info__back">Вернуться</Link>
             </div>
@@ -76,9 +41,20 @@ function ManagerOrderInfo(props) {
 
 }
 
-const mapStateToProps = (state /*, ownProps*/) => {
+const mapStateToProps = (state , props) => {
+
+    const order = state.bookingInfo.itemsx[moment().format('YYYY-MM-DD')].filter(item => item.id=== props.match.params.orderId)[0];
+    let table = false;
+    if (order !== undefined){
+        table = state.info.tablesList.filter(table => table.id === order.tableID)[0];
+    }
+
     return {
-        bookingInfo: state.bookingInfo.items
+        bookingInfo: state.bookingInfo.items,
+        showDate:state.showDate,
+        token:state.auth.token,
+        order,
+        table
     }
 };
 
