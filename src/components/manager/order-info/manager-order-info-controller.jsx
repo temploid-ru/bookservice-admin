@@ -18,7 +18,7 @@ export function deleteOrder(orderId, token) {
     });
 }
 
-export function prepareBookingInfo(order,table,currentDate ) {
+export function prepareBookingInfo(order, table, currentDate, token) {
 
     order.tableNumber = table.number;
 
@@ -31,21 +31,41 @@ export function prepareBookingInfo(order,table,currentDate ) {
     }
 
     order.dateText = '';
-    if ( currentDate === moment(order.dateStart).startOf('day').format()) {
+    if (currentDate === moment(order.dateStart).startOf('day').format()) {
         order.dateText = 'Сегодня • ';
     }
     order.dateText += moment(order.dateStart).format('DD MMM, ddd');
     order.timeText = moment(order.dateStart).format("HH:mm") + ' - ' + moment(order.dateEnd).format("HH:mm");
+
     order.status = getBookingStatus(order.status);
     order.numGuests = order.numGuests + declOfNum(order.numGuests, [" гость", ' гостя', ' гостей']);
-    order.status.buttonText = (order.status.buttonText)
 
-            //TODO Ждем когда Артур сделает смену статусов.
-        ? <div className="order-info__btn order-info__status-color">
+
+    console.log('order.status.buttonText', order.status.buttonText);
+
+    if (order.status.buttonText) {
+        order.status.button = <div className="order-info__btn order-info__status-color"
+                                   onClick={() => updateState(order.id, order.status.nextStatus, token)}>
             <div className="order-info__icon"><SvgOk/></div>
             <div className="order-info__text">{order.status.buttonText}</div>
         </div>
-        : null;
+    } else {
+        order.status.button = null;
+    }
 
-        return order;
+    return order;
 }
+
+export function updateState(orderId, status, token) {
+    const body = {
+        method: "BookingEdit",
+        token,
+        id: orderId,
+        newStatus: status,
+    }
+
+    fetch(API_POINT + '/bookings', {method: "post", body: JSON.stringify(body)})
+        .then(r => r.json()).then(json => console.log(json));
+
+}
+

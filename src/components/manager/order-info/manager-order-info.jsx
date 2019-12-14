@@ -9,7 +9,11 @@ import {deleteOrder, prepareBookingInfo} from "./manager-order-info-controller";
 function ManagerOrderInfo(props) {
     const {orderId} = props.match.params;
 
-    const bookingInfo = prepareBookingInfo(props.order, props.table, props.showDate);
+    const bookingInfo = prepareBookingInfo(props.order, props.table, props.showDate, props.token);
+
+    console.log('props.order',props.order);
+
+    const isTwoButtons = bookingInfo.status.button ? '':' two-buttons';
 
     return (
         <div className={"order-info " + bookingInfo.status.statusClass}>
@@ -21,13 +25,13 @@ function ManagerOrderInfo(props) {
             <div className="order-info__time">{bookingInfo.timeText}</div>
             <div className="order-info__table-number">{bookingInfo.tableNumber} столик</div>
             <div className={"order-info__deposit " + bookingInfo.depositClass}>{bookingInfo.depositText}</div>
-            <div className="order-info__footer-block ">
+            <div className={"order-info__footer-block " + isTwoButtons}>
                 <Link to={"/manager/order-edit/"+bookingInfo.tableId+"/" + orderId} className="order-info__btn">
                     <div className="order-info__icon"><SvgEdit/></div>
                     <div className="order-info__text">Изменить</div>
                 </Link>
 
-                {bookingInfo.status.buttonText}
+                {bookingInfo.status.button}
 
                 <div className="order-info__btn">
                     <div className="order-info__icon"><SvgDelete/></div>

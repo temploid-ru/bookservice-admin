@@ -8,18 +8,24 @@ export const getBookingStatus = (status) => {
     switch (status) {
         case 'locked':
             return {
+                status: 'locked',
+                nextStatus: 'booked',
                 statusClass: 'is-locked',
                 statusText: 'Ожидает подтверждения',
                 buttonText: 'Подтвердить',
             };
         case 'booked':
             return {
+                status: 'booked',
+                nextStatus: 'arrived',
                 statusClass: 'is-booked',
                 statusText: 'Ожидание гостя',
                 buttonText: 'Гость на месте',
             };
-        case '':
+        case 'arrived':
             return {
+                status: 'arrived',
+                nextStatus: 'locked',
                 statusClass: 'is-arrived',
                 statusText: 'Гость на месте',
                 buttonText: false,
