@@ -1,4 +1,5 @@
 import moment from "moment";
+import showDate from "../../../reducers/manager/show-date";
 
 /**
  * Формируем массив сетки
@@ -116,4 +117,24 @@ export function generateWorkTimeGrid(workTime, activeDate, gridStep) {
     }
 
     return JSON.stringify(result);
+}
+
+
+export const getActiveDayText = (showDate) => {
+    let result = '';
+
+    if (showDate.activeDate === showDate.currentDate) {
+        result += 'Сегодня • ';
+    }
+
+    result += moment(showDate.activeDate).format('DD MMM, ddd');
+
+    return result
+};
+
+export function updateActiveDate(showDate, newValue, setStateAction) {
+    const activeDate = moment(showDate.activeDate).add(newValue,'d').format();
+
+    setStateAction({...showDate, activeDate})
+
 }

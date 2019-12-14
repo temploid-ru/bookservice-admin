@@ -4,16 +4,19 @@ import {connect} from 'react-redux';
 import {Calendar, NewOrder, SearchButton, TableGrid} from "./manager-dashboard-views";
 
 import './manager-dashboard.scss';
-import {getTableGrid} from "./manager-dashboard-container";
+import {getActiveDayText, getTableGrid, updateActiveDate} from "./manager-dashboard-container";
+import {SHOW_DATE__SET} from "../../../constants/manager";
 
-function ManagerDashboard(props){
-    const tableGrid =  getTableGrid(props);
+function ManagerDashboard(props) {
+
 
     return (
         <div>
             <SearchButton/>
-            <Calendar text={'Сегодня • 14 сен, ср'} changeDay={value=>console.log('changeDay',value)}/>
-            <TableGrid items={tableGrid}/>
+
+            <Calendar text={getActiveDayText(props.showDate)}
+                      changeDay={value => updateActiveDate(props.showDate, value, props.setDate)}/>
+            <TableGrid items={getTableGrid(props)}/>
             <NewOrder/>
         </div>
     )
@@ -22,11 +25,17 @@ function ManagerDashboard(props){
 const mapStateToProps = (state /*, ownProps*/) => {
     return {
         bookingInfo: state.bookingInfo.items,
-        bookingInterval:state.info.companyInfo.bookingInterval,
+        bookingInterval: state.info.companyInfo.bookingInterval,
         tablesList: state.info.tablesList,
         workTime: state.info.workTime,
         showDate: state.showDate,
     }
 };
 
-export default connect(mapStateToProps,null)(ManagerDashboard);
+const mapDispatchToProps = dispatch => {
+    return {
+        setDate: payload => dispatch({type: SHOW_DATE__SET, payload}),
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManagerDashboard);
