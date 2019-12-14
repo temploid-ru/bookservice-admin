@@ -11,7 +11,7 @@ export default function ManagerRouter() {
             <Switch>
                 <Route path="/manager/order-info/:orderId/" component={ManagerOrderInfo} />
                 <Route path="/manager/search/"><ManagerSearch/></Route>
-                <Route path="/manager/order-edit/:orderId/" component={ManagerOrderEdit} />
+                <Route path="/manager/order-edit/:tableId/:orderId/" component={ManagerOrderEdit} />
                 <Route path="/manager/order-edit/" component={ManagerOrderEdit} />
                 <Route path="/manager/"><ManagerDashboard/></Route>
             </Switch>

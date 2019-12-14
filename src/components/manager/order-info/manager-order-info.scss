@@ -112,6 +112,7 @@
     padding-top: 15px;
     padding-bottom: 13px;
     text-align: center;
+    text-decoration: none;
 
     &.order-info__status-color {
       .is-locked & {
@@ -133,6 +134,7 @@
     line-height: 15px;
     font-weight: 500;
     color: #000000;
+
 
     .order-info__status-color & {
       color: white;

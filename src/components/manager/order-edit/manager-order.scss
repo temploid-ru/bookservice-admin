@@ -1,5 +1,27 @@
 @import "./../../../vars";
 
+@mixin _minus($rotate) {
+  content: '';
+  display: block;
+  background: #000000;
+  border-radius: 2px;
+  width: 2px;
+  height: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateZ($rotate);
+  transform-origin: center;
+
+}
+
+@mixin _orderTitle() {
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+  line-height: 26px;
+  color: #000000;
+}
+
 .order-edit {
   padding: 15px 15px 5px;
 
@@ -34,13 +56,6 @@
   &__btn-order {
     @include btn(#1EC025, #fff);
   }
-}
-
-@mixin _orderTitle() {
-  font-family: 'Roboto Slab', serif;
-  font-size: 20px;
-  line-height: 26px;
-  color: #000000;
 }
 
 .order-date {
@@ -113,20 +128,58 @@
   }
 }
 
-@mixin _minus($rotate) {
-  content: '';
-  display: block;
-  background: #000000;
-  border-radius: 2px;
-  width: 2px;
-  height: 20px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotateZ($rotate);
-  transform-origin: center;
+.order-time {
+  margin-bottom: 10px;
 
+  &__title {
+    @include _orderTitle();
+  }
+
+  ul {
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  li {
+    list-style-type: none;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+
+    &.is-disabled {
+      text-decoration: line-through;
+      color: #ACA6A6;
+    }
+
+    &.is-active {
+      position: relative;
+      color: white;
+
+      &:after {
+        content: '';
+        display: block;
+        width: 54px;
+        height: 54px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: black;
+        border-radius: 50%;
+        position: absolute;
+      }
+    }
+  }
+
+  span {
+    position: relative;
+    z-index: 1;
+  }
 }
+
 
 .order-guest-counter {
   display: flex;

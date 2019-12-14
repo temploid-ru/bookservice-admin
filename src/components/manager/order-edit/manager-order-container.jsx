@@ -1,9 +1,29 @@
 import moment from "moment";
 
+export const defaultOrder = (currentDate, tableId, depositTable) => {
+    return {
+        clientName: "",
+        clientPhone: "",
+        // dateEnd: false,
+        dateStart: currentDate,
+        deposit: depositTable,
+        id: false,
+        numGuests: 2,
+        status: "booked",
+        tableID: tableId,
+    }
+};
+
+/**
+ * Собираем календарь
+ *
+ * @param currentDate
+ * @return {[]}
+ */
 export function getOrderDates(currentDate) {
     const result = [];
 
-    const momentCurrentDay = moment(currentDate);
+    const momentCurrentDay = moment(currentDate).startOf('day');
 
     const datOfWeek = momentCurrentDay.format('e');
 
@@ -30,5 +50,35 @@ export function getOrderDates(currentDate) {
         result.push({});
     }
 
+    return result;
+}
+
+
+/**
+ * Собираем рабочее время заведения
+ *
+ * @param date
+ * @param startTime
+ * @param endTime
+ * @param bookingInterval
+ * @return {[]}
+ */
+export function calculateWorkTime(date,startTime,endTime, bookingInterval) {
+    const result = [];
+
+
+    const currentTime = moment();
+    const momentCurrentTime = moment(date).startOf('day').add(startTime, 's');
+    const momentEndTime = moment(date).startOf('day').add(endTime, 's');
+
+    while (momentCurrentTime < momentEndTime) {
+        result.push({
+            title: momentCurrentTime.format("HH:mm"),
+            value: momentCurrentTime.format(),
+            active: currentTime > momentCurrentTime ? 'is-disabled' : '',
+        });
+
+        momentCurrentTime.add(+bookingInterval, 's');
+    }
     return result;
 }

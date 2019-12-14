@@ -7,40 +7,57 @@ import {
     OrderTableSelect,
     OrderTime
 } from "./manager-order-edit-view";
-import {getOrderDates} from "./manager-order-container";
+import {calculateWorkTime, defaultOrder, getOrderDates} from "./manager-order-container";
 import {connect} from 'react-redux';
 
 import './manager-order.scss';
+import moment from "moment";
 
 function ManagerOrderEdit(props) {
-    const [order, setOrder] = useState({
-        date: props.currentDate,
-        countGuests: 2,
-        duration: 2*3600,
-    });
+    const {orderId, tableId} = props.match.params;
 
-    const orderDates = getOrderDates(props.currentDate);
+    const defaultFields = defaultOrder(props.showDate.activeDate, tableId, 500);
+
+    const orderFields = (orderId !== undefined)
+        ? props.bookingInfo.filter(item => item.id === orderId)[0] || defaultFields
+        : defaultFields;
+
+    const [order, setOrder] = useState(orderFields);
+
+    console.log("order", order);
+
+    const orderDates = getOrderDates(props.showDate.currentDate);
 
 
     return (
         <div className="order-edit">
             <div className="order-edit__title">Забронировать столик</div>
 
-            <OrderDate items={orderDates} currentDate={props.currentDate} orderDate={order.date}
-                       updateHandler={v => setOrder({...order, date: v})}/>
+            <OrderDate items={orderDates} currentDate={props.showDate.currentDate} orderDate={order.dateStart}
+                       updateHandler={v => setOrder({...order, dateStart: v})}/>
 
-            <OrderTime/>
-            <OrderGuestCounter countGuests={order.countGuests}
-                               updateHandler={v => setOrder({...order, countGuests: v})}/>
+            <OrderTime
+                workTime={calculateWorkTime(
+                    order.dateStart,
+                    props.workTime.startTime,
+                    props.workTime.endTime,
+                    props.bookingInterval
+                )}
+                value={order.dateStart}
+                // updateHandler={v => console.log(v)}
+                updateHandler={v => setOrder({...order, dateStart: v})}
+            />
+            <OrderGuestCounter countGuests={order.numGuests}
+                               updateHandler={v => setOrder({...order, numGuests: v})}/>
 
             <OrderDuration duration={order.duration} updateHandler={v => setOrder({...order, duration: v})}/>
 
             <OrderTableSelect/>
             <OrderClientInfo
-                name={order.name}
-                phone={order.phone}
-                setName={v => setOrder({...order, name: v})}
-                setPhone={v => setOrder({...order, phone: v})}
+                clientName={order.clientName}
+                clientPhone={order.clientPhone}
+                setName={v => setOrder({...order, clientName: v})}
+                setPhone={v => setOrder({...order, clientPhone: v})}
             />
             <OrderDeposit
                 deposit={order.deposit}
@@ -52,7 +69,7 @@ function ManagerOrderEdit(props) {
             />
 
             <div className="order-edit__buttons">
-                <div className="order-edit__btn-back">Отмена</div>
+                <div className="order-edit__btn-back" onClick={() => props.history.goBack()}>Отмена</div>
                 <div className="order-edit__btn-order">Забронировать</div>
             </div>
 
@@ -63,8 +80,11 @@ function ManagerOrderEdit(props) {
 
 const mapStateToProps = (state /*, ownProps*/) => {
     return {
-        // bookingInfo: state.bookingInfo
-        currentDate: state.showDate.currentDate
+        bookingDuration: state.info.companyInfo.bookingDuration,
+        bookingInterval: state.info.companyInfo.bookingInterval,
+        workTime: state.info.workTime,
+        bookingInfo: state.bookingInfo.itemsx[moment(state.showDate.activeDate).format("YYYY-MM-DD")],
+        showDate: state.showDate
     }
 };
 

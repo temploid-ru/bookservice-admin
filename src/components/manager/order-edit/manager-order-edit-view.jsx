@@ -3,8 +3,19 @@ import moment from "moment";
 import {declOfNum} from "../utils/utils";
 import {SvgDelete, SvgSelectBoxArrow} from "../../../assets/svg";
 
-
+/**
+ * Календарь дат
+ *
+ * @param props
+ * @return {*}
+ * @constructor
+ */
 export function OrderDate(props) {
+
+    console.log('props.orderDate',props);
+
+    const orderDate = moment(props.orderDate).startOf('day').format();
+
     const currentDayText = 'Сегодня • ' + moment(props.currentDate).format('DD MMM, dddd');
 
     return (
@@ -16,7 +27,7 @@ export function OrderDate(props) {
             <ul className="order-date__body">
                 {
                     props.items.map((item, index) => {
-                        const isCurrentDate = (item.value === props.orderDate) ? 'is-active' : '';
+                        const isCurrentDate = (item.value === orderDate) ? 'is-active' : '';
                         return (
                             <li key={index} className={isCurrentDate} onClick={() => props.updateHandler(item.value)}>
                                 <span>{item.title}</span></li>)
@@ -29,10 +40,28 @@ export function OrderDate(props) {
     )
 }
 
+/**
+ * Вывод времени
+ *
+ * @param props
+ * @return {*}
+ * @constructor
+ */
 export function OrderTime(props) {
     return (
         <div className="order-time">
-            OrderTime
+            <div className="order-time__title">Время</div>
+            <ul>
+                {props.workTime.map(item => {
+
+                    const event = item.active === '' ? (value) => props.updateHandler(value) : null;
+
+                    const isActive = item.value === props.value ? 'is-active' : '';
+
+                    return <li className={item.active + ' ' + isActive} key={item.value}
+                               onClick={() => event(item.value)}><span>{item.title}</span></li>
+                })}
+            </ul>
         </div>
     )
 }
@@ -142,8 +171,8 @@ export function OrderClientInfo(props) {
         <div className="order-client-info">
             <div className="order-client-info__title">Клиент</div>
             <div className="order-client-info__body">
-                <input type="text" value={props.name} onChange={e => props.setName(e.target.value)}/>
-                <input type="text" value={props.phone} onChange={e => props.setPhone(e.target.value)}/>
+                <input type="text" value={props.clientName} onChange={e => props.setName(e.target.value)}/>
+                <input type="text" value={props.clientPhone} onChange={e => props.setPhone(e.target.value)}/>
             </div>
         </div>
     )
@@ -154,7 +183,7 @@ export function OrderDeposit(props) {
         <div className='order-deposit'>
             <div className="order-deposit__title">Депозит</div>
             <div className="order-deposit__body">
-                <input type="text" value={props.deposit} onChange={e=>props.updateHandler(e.target.value)}/>
+                <input type="text" value={props.deposit} onChange={e => props.updateHandler(e.target.value)}/>
                 <div className="order-deposit__icon">₽</div>
             </div>
         </div>
@@ -166,7 +195,7 @@ export function OrderComment(props) {
         <div className='order-comment'>
             <div className="order-comment__title">Комментарий к брони</div>
             <div className="order-comment__body">
-                <textarea type="text" value={props.comment} onChange={e=>props.updateHandler(e.target.value)}/>
+                <textarea type="text" value={props.comment} onChange={e => props.updateHandler(e.target.value)}/>
             </div>
         </div>
     )
