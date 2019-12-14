@@ -12,8 +12,6 @@ import {SvgDelete, SvgSelectBoxArrow} from "../../../assets/svg";
  */
 export function OrderDate(props) {
 
-    console.log('props.orderDate',props);
-
     const orderDate = moment(props.orderDate).startOf('day').format();
 
     const currentDayText = 'Сегодня • ' + moment(props.currentDate).format('DD MMM, dddd');
@@ -48,18 +46,24 @@ export function OrderDate(props) {
  * @constructor
  */
 export function OrderTime(props) {
+
+    const currentTime = moment().add('5', 'h').format('x');
+
     return (
         <div className="order-time">
             <div className="order-time__title">Время</div>
             <ul>
                 {props.workTime.map(item => {
 
-                    const event = item.active === '' ? (value) => props.updateHandler(value) : null;
+                    if (currentTime > item.timestamp)
+                        return <li className='is-disabled' key={item.value}>{item.value}</li>
+                    else {
 
-                    const isActive = item.value === props.value ? 'is-active' : '';
+                        const isActive = (item.value === props.orderTime) ? 'is-active' : '';
 
-                    return <li className={item.active + ' ' + isActive} key={item.value}
-                               onClick={() => event(item.value)}><span>{item.title}</span></li>
+                        return <li className={isActive} key={item.value}
+                                   onClick={() => props.updateHandler(item.value)}><span>{item.value}</span></li>
+                    }
                 })}
             </ul>
         </div>
@@ -89,22 +93,21 @@ export function OrderGuestCounter(props) {
     )
 }
 
-export function OrderDuration(props) {
+export const durationVariants = [
+    {title: "2 часа", value: 2},
+    {title: "3 часа", value: 3},
+    {title: "4 часа", value: 4},
+    {title: "5 часов", value: 5},
+    {title: "6 часов", value: 6},
+    {title: "7 часов", value: 7},
+];
 
+export function OrderDuration(props) {
     const [isOpened, setIsOpened] = useState(false);
 
     const isOpenedClass = (isOpened) ? "is-opened" : '';
-    let durationText = props.duration / 3600;
+    let durationText = props.duration;
     durationText = durationText + declOfNum(durationText, [' час', ' часа', ' часов']);
-
-    const variants = [
-        {title: "2 часа", value: 2 * 3600},
-        {title: "3 часа", value: 3 * 3600},
-        {title: "4 часа", value: 4 * 3600},
-        {title: "5 часов", value: 5 * 3600},
-        {title: "6 часов", value: 6 * 3600},
-        {title: "7 часов", value: 7 * 3600},
-    ];
 
     return (
         <div className="order-duration">
@@ -116,9 +119,12 @@ export function OrderDuration(props) {
                 </div>
                 <ul className="select-box__values">
                     {
-                        variants.map(item => (item.value === props.duration)
+                        durationVariants.map(item => (item.value === props.duration)
                             ? null
-                            : <li key={item.title} onClick={() => props.updateHandler(item.value)}>
+                            : <li key={item.title} onClick={() => {
+                                setIsOpened(!isOpened);
+                                props.updateHandler(item.value)
+                            }}>
                                 {item.title}
                             </li>)
                     }
@@ -135,7 +141,6 @@ export function OrderTableSelect(props) {
     if (tableNumber === false) {
 
         const available = '2 свободно';
-        const selected = 'Добавить столик ';
 
         return (
             <div className="order-table-select">
@@ -179,15 +184,21 @@ export function OrderClientInfo(props) {
 }
 
 export function OrderDeposit(props) {
-    return (
-        <div className='order-deposit'>
-            <div className="order-deposit__title">Депозит</div>
-            <div className="order-deposit__body">
-                <input type="text" value={props.deposit} onChange={e => props.updateHandler(e.target.value)}/>
-                <div className="order-deposit__icon">₽</div>
+
+    if (props.deposit === false) {
+        return null;
+    } else {
+
+        return (
+            <div className='order-deposit'>
+                <div className="order-deposit__title">Депозит</div>
+                <div className="order-deposit__body">
+                    <input type="text" value={props.deposit} onChange={e => props.updateHandler(e.target.value)}/>
+                    <div className="order-deposit__icon">₽</div>
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export function OrderComment(props) {

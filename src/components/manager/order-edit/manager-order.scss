@@ -185,6 +185,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 29px;
 
   &__value {
     font-family: 'Roboto Slab', serif;
@@ -235,6 +236,9 @@
         &__value {
           border-bottom-left-radius: 0;
           border-bottom-right-radius: 0;
+          border-top-color: $primary-color;
+          border-left-color: $primary-color;
+          border-right-color: $primary-color;
         }
 
         &__values {
@@ -268,7 +272,8 @@
       margin: 0;
       padding: 0;
       background-color: white;
-      border: 1px solid #DBDBDB;
+      border: 1px solid $primary-color;
+      border-top-color: #DBDBDB;
       position: absolute;
       bottom: 1px;
       transform: translateY(100%);
@@ -280,6 +285,7 @@
       li {
         list-style-type: none;
         padding: 15px 45px 15px 15px;
+        color: black;
 
         &:not(:last-child) {
           border-bottom: 1px solid #DBDBDB;

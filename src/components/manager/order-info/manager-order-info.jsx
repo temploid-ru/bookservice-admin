@@ -1,6 +1,5 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import Preloader from "../../preloader";
 import {declOfNum, getBookingStatus} from "../utils/utils";
 import {SvgDelete, SvgEdit, SvgOk} from "../../../assets/svg";
 import {Link} from 'react-router-dom';
@@ -39,7 +38,6 @@ function ManagerOrderInfo(props) {
 
     bookingInfo.numGuests = bookingInfo.numGuests + declOfNum(bookingInfo.numGuests, [" гость", ' гостя', ' гостей']);
 
-    console.log('ManagerOrderInfo', bookingInfo);
 
     bookingInfo.status.buttonText = (bookingInfo.status.buttonText)
         ? <div className="order-info__btn order-info__status-color">

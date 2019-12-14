@@ -7,7 +7,11 @@ import {
     OrderTableSelect,
     OrderTime
 } from "./manager-order-edit-view";
-import {calculateWorkTime, defaultOrder, getOrderDates} from "./manager-order-container";
+import {
+    calculateWorkTime,
+    defineOrderData,
+    getOrderDates
+} from "./manager-order-container";
 import {connect} from 'react-redux';
 
 import './manager-order.scss';
@@ -16,43 +20,43 @@ import moment from "moment";
 function ManagerOrderEdit(props) {
     const {orderId, tableId} = props.match.params;
 
-    const defaultFields = defaultOrder(props.showDate.activeDate, tableId, 500);
-
-    const orderFields = (orderId !== undefined)
-        ? props.bookingInfo.filter(item => item.id === orderId)[0] || defaultFields
-        : defaultFields;
-
-    const [order, setOrder] = useState(orderFields);
+    const [order, setOrder] = useState(defineOrderData(props,orderId,tableId));
 
     console.log("order", order);
-
-    const orderDates = getOrderDates(props.showDate.currentDate);
-
 
     return (
         <div className="order-edit">
             <div className="order-edit__title">Забронировать столик</div>
 
-            <OrderDate items={orderDates} currentDate={props.showDate.currentDate} orderDate={order.dateStart}
-                       updateHandler={v => setOrder({...order, dateStart: v})}/>
+            <OrderDate
+                items={getOrderDates(props.showDate.currentDate)}
+                currentDate={props.showDate.currentDate}
+                orderDate={order.date}
+                updateHandler={v => setOrder({...order, date: v})}
+            />
+
 
             <OrderTime
                 workTime={calculateWorkTime(
-                    order.dateStart,
+                    order.date,
                     props.workTime.startTime,
                     props.workTime.endTime,
                     props.bookingInterval
                 )}
-                value={order.dateStart}
-                // updateHandler={v => console.log(v)}
-                updateHandler={v => setOrder({...order, dateStart: v})}
+                orderTime={order.time}
+                updateHandler={v => setOrder({...order, time: v})}
             />
-            <OrderGuestCounter countGuests={order.numGuests}
-                               updateHandler={v => setOrder({...order, numGuests: v})}/>
 
-            <OrderDuration duration={order.duration} updateHandler={v => setOrder({...order, duration: v})}/>
+            <OrderGuestCounter
+                countGuests={order.guests}
+                updateHandler={v => setOrder({...order, guests: v})}
+            />
+
+            <OrderDuration duration={order.duration}
+                           updateHandler={v => setOrder({...order, duration:v})}/>
 
             <OrderTableSelect/>
+
             <OrderClientInfo
                 clientName={order.clientName}
                 clientPhone={order.clientPhone}

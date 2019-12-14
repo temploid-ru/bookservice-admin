@@ -1,18 +1,26 @@
 import moment from "moment";
 
-export const defaultOrder = (currentDate, tableId, depositTable) => {
-    return {
+/**
+ * Определяем дефолтные данные для манипулирования заказом
+ *
+ * @param props
+ */
+export function defineOrderData(props,orderId,tableId) {
+
+    const result = {
+        date: props.showDate.currentDate,
+        time: false,
+        duration: 2,
+        guests: 2,
+        table: '5db8169290b63cd40c7144fb',
         clientName: "",
         clientPhone: "",
-        // dateEnd: false,
-        dateStart: currentDate,
-        deposit: depositTable,
-        id: false,
-        numGuests: 2,
-        status: "booked",
-        tableID: tableId,
-    }
-};
+        deposit: false,
+        comment: ''
+    };
+
+    return result;
+}
 
 /**
  * Собираем календарь
@@ -21,36 +29,50 @@ export const defaultOrder = (currentDate, tableId, depositTable) => {
  * @return {[]}
  */
 export function getOrderDates(currentDate) {
-    const result = [];
 
-    const momentCurrentDay = moment(currentDate).startOf('day');
+    const storageKey = 'order_dates_' + currentDate;
 
-    const datOfWeek = momentCurrentDay.format('e');
+    let result = sessionStorage.getItem(storageKey);
 
-    //Добавляем фэйковые даты ДО текущей даты
-    for (let i = 0; i < datOfWeek; i++) {
-        result.push({});
+    if (result === null) {
+
+        let result = [];
+
+        const momentCurrentDay = moment(currentDate).startOf('day');
+
+        const datOfWeek = momentCurrentDay.format('e');
+
+        //Добавляем фэйковые даты ДО текущей даты
+        for (let i = 0; i < datOfWeek; i++) {
+            result.push({});
+        }
+
+        // Вычисляем 14 дней вперед
+        for (let i = 0; i < 14; i++) {
+
+            const day = (i === 0) ? momentCurrentDay : momentCurrentDay.add(1, 'd');
+
+            result.push({
+                title: day.format('DD'),
+                value: day.format(),
+            })
+        }
+
+        // Добиваем фэйки до конца недели
+        const countLastDates = 7 - (result.length % 7);
+
+        for (let i = 0; i < countLastDates; i++) {
+            result.push({});
+        }
+
+        sessionStorage.setItem(storageKey, JSON.stringify(result));
+
+        return result;
     }
 
-    // Вычисляем 14 дней вперед
-    for (let i = 0; i < 14; i++) {
+    return JSON.parse(result);
 
-        const day = (i === 0) ? momentCurrentDay : momentCurrentDay.add(1, 'd');
 
-        result.push({
-            title: day.format('DD'),
-            value: day.format(),
-        })
-    }
-
-    // Добиваем фэйки до конца недели
-    const countLastDates = 7 - (result.length % 7);
-
-    for (let i = 0; i < countLastDates; i++) {
-        result.push({});
-    }
-
-    return result;
 }
 
 
@@ -63,22 +85,44 @@ export function getOrderDates(currentDate) {
  * @param bookingInterval
  * @return {[]}
  */
-export function calculateWorkTime(date,startTime,endTime, bookingInterval) {
-    const result = [];
+export function calculateWorkTime(date, startTime, endTime, bookingInterval) {
 
+    const storageKey = 'order_workTime_' + date;
 
-    const currentTime = moment();
-    const momentCurrentTime = moment(date).startOf('day').add(startTime, 's');
-    const momentEndTime = moment(date).startOf('day').add(endTime, 's');
+    let result = sessionStorage.getItem(storageKey);
 
-    while (momentCurrentTime < momentEndTime) {
-        result.push({
-            title: momentCurrentTime.format("HH:mm"),
-            value: momentCurrentTime.format(),
-            active: currentTime > momentCurrentTime ? 'is-disabled' : '',
-        });
+    if (result === null) {
 
-        momentCurrentTime.add(+bookingInterval, 's');
+        result = [];
+
+        const momentCurrentTime = moment(date).startOf('day').add(startTime, 's');
+        const momentEndTime = moment(date).startOf('day').add(endTime, 's');
+
+        while (momentCurrentTime < momentEndTime) {
+            result.push({
+                value: momentCurrentTime.format("HH:mm"),
+                timestamp: momentCurrentTime.format('x'),
+            });
+
+            momentCurrentTime.add(+bookingInterval, 's');
+        }
+
+        sessionStorage.setItem(storageKey,JSON.stringify(result));
+
+        return result;
     }
-    return result;
+    return JSON.parse(result);
 }
+
+/**
+ * Конвертируем продолжительность визита в часы
+ *
+ * @param dateStart
+ * @param dateEnd
+ * @return {number}
+ */
+export function convertDurationInHours(dateStart, dateEnd) {
+    return moment(dateEnd).diff(moment(dateStart), 'h');
+}
+
+
