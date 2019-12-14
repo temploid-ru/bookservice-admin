@@ -47,7 +47,7 @@ export function OrderDate(props) {
  */
 export function OrderTime(props) {
 
-    const currentTime = moment().add('5', 'h').format('x');
+    const currentTime = moment().format('x');
 
     return (
         <div className="order-time">

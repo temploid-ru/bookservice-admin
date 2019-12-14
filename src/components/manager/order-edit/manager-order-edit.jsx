@@ -10,7 +10,7 @@ import {
 import {
     calculateWorkTime,
     defineOrderData,
-    getOrderDates
+    getOrderDates, saveOrder
 } from "./manager-order-container";
 import {connect} from 'react-redux';
 
@@ -20,7 +20,9 @@ import moment from "moment";
 function ManagerOrderEdit(props) {
     const {orderId, tableId} = props.match.params;
 
-    const [order, setOrder] = useState(defineOrderData(props,orderId,tableId));
+    // console.log('ManagerOrderEdit', props.bookingInfo.filter(item => item.id === orderId)[0]);
+
+    const [order, setOrder] = useState(defineOrderData(props, props.bookingInfo.filter(item => item.id === orderId)[0], tableId));
 
     console.log("order", order);
 
@@ -53,7 +55,7 @@ function ManagerOrderEdit(props) {
             />
 
             <OrderDuration duration={order.duration}
-                           updateHandler={v => setOrder({...order, duration:v})}/>
+                           updateHandler={v => setOrder({...order, duration: v})}/>
 
             <OrderTableSelect/>
 
@@ -74,7 +76,7 @@ function ManagerOrderEdit(props) {
 
             <div className="order-edit__buttons">
                 <div className="order-edit__btn-back" onClick={() => props.history.goBack()}>Отмена</div>
-                <div className="order-edit__btn-order">Забронировать</div>
+                <div className="order-edit__btn-order" onClick={() => saveOrder(order, props.token)}>Забронировать</div>
             </div>
 
 
@@ -88,7 +90,8 @@ const mapStateToProps = (state /*, ownProps*/) => {
         bookingInterval: state.info.companyInfo.bookingInterval,
         workTime: state.info.workTime,
         bookingInfo: state.bookingInfo.itemsx[moment(state.showDate.activeDate).format("YYYY-MM-DD")],
-        showDate: state.showDate
+        showDate: state.showDate,
+        token: state.auth.token,
     }
 };
 

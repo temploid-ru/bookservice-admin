@@ -1,23 +1,66 @@
 import moment from "moment";
+import {API_POINT} from "../../../constants";
 
 /**
  * Определяем дефолтные данные для манипулирования заказом
  *
  * @param props
  */
-export function defineOrderData(props,orderId,tableId) {
+export function defineOrderData(props, orderInfo, tableId) {
 
     const result = {
-        date: props.showDate.currentDate,
+        id: false,
         time: false,
         duration: 2,
+        date: props.showDate.currentDate,
         guests: 2,
-        table: '5db8169290b63cd40c7144fb',
+        table: false,
         clientName: "",
         clientPhone: "",
         deposit: false,
         comment: ''
     };
+
+    if (orderInfo) {
+
+        console.log('orderInfo.dateStart', orderInfo.dateStart);
+
+        const dateStart = moment(orderInfo.dateStart);
+        const dateEnd = moment(orderInfo.dateEnd);
+
+        console.log(dateEnd.diff(dateStart,"h"));
+
+
+        result.id = orderInfo.id;
+
+        //  result.time и result.date не менять метами, т.к. иначе будет сброс начало дня
+        result.time = dateStart.format('HH:mm');
+        result.duration = dateEnd.diff(dateStart, 'h');
+
+
+        result.date = dateStart.startOf('day').format();
+        result.guests = orderInfo.numGuests;
+        result.table = tableId;
+        result.clientName = orderInfo.clientName;
+        result.clientPhone = orderInfo.clientPhone;
+        result.deposit = orderInfo.deposit;
+        result.comment = orderInfo.clientComment;
+    }
+
+    console.log('RESULT', result);
+
+    // const result = {
+    //     id: false,
+    //     date: props.showDate.currentDate,
+    //     time: false,
+    //     duration: 2,
+    //     guests: 2,
+    //     table: '5db8169290b63cd40c7144fb',
+    //     clientName: "Иван Иванов",
+    //     clientPhone: "+7999-999-99-99",
+    //     deposit: 500,
+    //     comment: 'TEXT COMMENT'
+    // };
 
     return result;
 }
@@ -107,7 +150,7 @@ export function calculateWorkTime(date, startTime, endTime, bookingInterval) {
             momentCurrentTime.add(+bookingInterval, 's');
         }
 
-        sessionStorage.setItem(storageKey,JSON.stringify(result));
+        sessionStorage.setItem(storageKey, JSON.stringify(result));
 
         return result;
     }
@@ -125,4 +168,36 @@ export function convertDurationInHours(dateStart, dateEnd) {
     return moment(dateEnd).diff(moment(dateStart), 'h');
 }
 
+export function saveOrder(order, token) {
 
+    let timecode = order.date;
+    timecode = timecode.replace('00:00:00', order.time + ":00");
+
+    const duration = moment.duration(order.duration, 'h').toISOString();
+
+    const body = {
+        "token": token,
+        "timecode": timecode,
+        "num_guests": parseInt(order.guests),
+        "duration": duration,
+        "deposit": parseFloat(order.deposit), // !!!! не вижу в bookingEdit
+        "ps_token": '', // !!!! не вижу в bookingEdit
+        "client": {
+            "name": order.clientName,
+            "phone": order.clientPhone,
+            "comment": order.comment
+        }
+    };
+
+    if (order.id) {
+        body.method = "BookingEdit";
+        body.id = order.id;
+
+    } else {
+        body.method = "BookingAdd";
+        body.table_id = order.table;
+    }
+
+    fetch(API_POINT + "/bookings", {method: 'post', body: JSON.stringify(body)})
+        .then(r => r.json()).then(json => console.log('json response', json));
+}
