@@ -136,9 +136,7 @@ export function OrderDuration(props) {
 
 export function OrderTableSelect(props) {
 
-    const tableNumber = true;
-
-    if (tableNumber === false) {
+    if (props.table === false) {
 
         const available = '2 свободно';
 
@@ -164,7 +162,7 @@ export function OrderTableSelect(props) {
                 <div className="order-table-select__body-choose">
                     <div className="order-table-select__number">22 cтолик</div>
                     <div className="order-table-select__edit">Изменить</div>
-                    <div className="order-table-select__delete"><SvgDelete/></div>
+                    <div className="order-table-select__delete" onClick={()=>{props.deleteTable()}}><SvgDelete/></div>
                 </div>
             </div>
         )

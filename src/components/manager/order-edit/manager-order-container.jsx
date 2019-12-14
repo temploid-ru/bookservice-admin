@@ -22,21 +22,13 @@ export function defineOrderData(props, orderInfo, tableId) {
     };
 
     if (orderInfo) {
-
-        console.log('orderInfo.dateStart', orderInfo.dateStart);
-
         const dateStart = moment(orderInfo.dateStart);
         const dateEnd = moment(orderInfo.dateEnd);
-
-        console.log(dateEnd.diff(dateStart,"h"));
-
-
         result.id = orderInfo.id;
 
         //  result.time и result.date не менять метами, т.к. иначе будет сброс начало дня
         result.time = dateStart.format('HH:mm');
         result.duration = dateEnd.diff(dateStart, 'h');
-
 
         result.date = dateStart.startOf('day').format();
         result.guests = orderInfo.numGuests;
@@ -46,22 +38,6 @@ export function defineOrderData(props, orderInfo, tableId) {
         result.deposit = orderInfo.deposit;
         result.comment = orderInfo.clientComment;
     }
-
-    console.log('RESULT', result);
-
-    // const result = {
-    //     id: false,
-    //     date: props.showDate.currentDate,
-    //     time: false,
-    //     duration: 2,
-    //     guests: 2,
-    //     table: '5db8169290b63cd40c7144fb',
-    //     clientName: "Иван Иванов",
-    //     clientPhone: "+7999-999-99-99",
-    //     deposit: 500,
-    //     comment: 'TEXT COMMENT'
-    // };
-
     return result;
 }
 

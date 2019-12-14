@@ -20,8 +20,6 @@ import moment from "moment";
 function ManagerOrderEdit(props) {
     const {orderId, tableId} = props.match.params;
 
-    // console.log('ManagerOrderEdit', props.bookingInfo.filter(item => item.id === orderId)[0]);
-
     const [order, setOrder] = useState(defineOrderData(props, props.bookingInfo.filter(item => item.id === orderId)[0], tableId));
 
     console.log("order", order);
@@ -57,7 +55,10 @@ function ManagerOrderEdit(props) {
             <OrderDuration duration={order.duration}
                            updateHandler={v => setOrder({...order, duration: v})}/>
 
-            <OrderTableSelect/>
+            <OrderTableSelect
+                table={order.table}
+                deleteTable={() => setOrder({...order, table: false})}
+            />
 
             <OrderClientInfo
                 clientName={order.clientName}
@@ -92,6 +93,7 @@ const mapStateToProps = (state /*, ownProps*/) => {
         bookingInfo: state.bookingInfo.itemsx[moment(state.showDate.activeDate).format("YYYY-MM-DD")],
         showDate: state.showDate,
         token: state.auth.token,
+        tablesList: state.info.tablesList,
     }
 };
 
