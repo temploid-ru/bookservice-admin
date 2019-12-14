@@ -151,7 +151,15 @@
     color: #000000;
 
     &.is-disabled {
+
+      &:not(.is-active){
       text-decoration: line-through;
+      }
+
+      &.is-active:after {
+        background-color: #ACA6A6;
+      }
+
       color: #ACA6A6;
     }
 

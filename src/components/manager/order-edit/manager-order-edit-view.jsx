@@ -55,12 +55,11 @@ export function OrderTime(props) {
             <ul>
                 {props.workTime.map(item => {
 
+                    const isActive = (item.value === props.orderTime) ? 'is-active' : '';
+
                     if (currentTime > item.timestamp)
-                        return <li className='is-disabled' key={item.value}>{item.value}</li>
+                        return <li className={'is-disabled ' + isActive} key={item.value}><span>{item.value}</span></li>
                     else {
-
-                        const isActive = (item.value === props.orderTime) ? 'is-active' : '';
-
                         return <li className={isActive} key={item.value}
                                    onClick={() => props.updateHandler(item.value)}><span>{item.value}</span></li>
                     }
