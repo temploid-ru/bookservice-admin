@@ -12,22 +12,24 @@ export default function getDataFromServer(token,setAction){
 
 }
 
-export function updateCompanyInfo(companyInfo,setAction, token){
+export function updateCompanyInfo(companyInfo,setStateAction, token){
+    console.log('!!!!!!',companyInfo.id);
     setDataToServer(companyInfo,token);
-    setAction(companyInfo);
+    setStateAction(companyInfo);
 }
 
 function setDataToServer(companyInfo, token){
+    let item = {...companyInfo};
 
-    const id = companyInfo.id;
+    const id = item.id;
 
-    delete companyInfo.id;
+    delete item.id;
 
     const body = {
         method: "CompanyEdit",
         token,
         id,
-        item: companyInfo
+        item
     };
 
     fetch(API_POINT + "/companies", {method:'post',body:JSON.stringify(body)})

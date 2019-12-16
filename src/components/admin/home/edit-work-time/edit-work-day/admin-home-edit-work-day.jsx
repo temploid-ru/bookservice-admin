@@ -4,9 +4,6 @@ import SelectBox from "../../../../select-box";
 
 function AdminHomeEditWorkDay(props) {
 
-    console.log(props);
-
-
     let {item} = props;
 
     let startTime = moment.utc(props.item.start_time * 1000).format('HH:mm:ss');

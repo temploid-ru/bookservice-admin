@@ -20,25 +20,29 @@ function AdminHome(props) {
 
     } else {
 
+        function update(obj){
+            updateCompanyInfo(obj,setCompanyInfo,props.token)
+        }
+
         return (
             <div className="admin-home">
                 <h1>Общие настройки</h1>
                 <div className="admin-home__items">
 
                     <AdminHomeItem title={"Название заведения"} value={companyInfo.name}
-                                   changeHandler={value => updateCompanyInfo({...companyInfo, name:value},setCompanyInfo,props.token)}/>
+                                   changeHandler={value => update({...companyInfo, name:value})}/>
 
                     <AdminHomeItem title={"Адрес заведения"} value={companyInfo.address}
-                                   changeHandler={value => updateCompanyInfo({...companyInfo, address:value},setCompanyInfo,props.token)}
+                                   changeHandler={value => update({...companyInfo, address:value})}
                     />
                     <AdminHomeItem title={"Номер телефона"} value={companyInfo.phone}
-                                   changeHandler={value => updateCompanyInfo({...companyInfo, phone:value},setCompanyInfo,props.token)}
+                                   changeHandler={value => update({...companyInfo, phone:value})}
                     />
                     <AdminHomeItem title={"Минимальное бронирование, час"} value={companyInfo.bookingDuration}
-                                   changeHandler={value => updateCompanyInfo({...companyInfo, bookingDuration: +value},setCompanyInfo,props.token)}
+                                   changeHandler={value => update({...companyInfo, bookingDuration: +value})}
                     />
 
-                    <AdminHomeEditWorkTime workTimeList={companyInfo.workdays} updateWorkTime={value => updateCompanyInfo({...companyInfo,workdays:value},setCompanyInfo,props.token)}/>
+                    <AdminHomeEditWorkTime workTimeList={companyInfo.workdays} updateWorkTime={value => update({...companyInfo,workdays:value})}/>
 
                 </div>
             </div>
