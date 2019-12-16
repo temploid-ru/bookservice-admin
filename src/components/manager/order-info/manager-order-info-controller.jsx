@@ -65,7 +65,10 @@ export function updateState(orderId, status, token) {
     }
 
     fetch(API_POINT + '/bookings', {method: "post", body: JSON.stringify(body)})
-        .then(r => r.json()).then(json => console.log(json));
+        .then(r => r.json()).then(json => {
+            alert('статус обновлен сделать poUp');
+        console.log(json)
+    });
 
 }
 

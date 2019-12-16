@@ -11,8 +11,6 @@ function ManagerOrderInfo(props) {
 
     const bookingInfo = prepareBookingInfo(props.order, props.table, props.showDate, props.token);
 
-    console.log('props.order',props.order);
-
     const isTwoButtons = bookingInfo.status.button ? '':' two-buttons';
 
     return (

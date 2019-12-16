@@ -9,6 +9,9 @@ import {SHOW_DATE__SET} from "../../../constants/manager";
 import moment from "moment";
 
 function ManagerDashboard(props) {
+
+    console.log('ManagerDashboard',props);
+
     return (
         <div>
             <SearchButton/>

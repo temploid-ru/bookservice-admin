@@ -30,7 +30,6 @@ export function Calendar(props) {
 
 export function TableGrid(props) {
 
-
     return (
         <table className="dashboard">
             {/*<thead>*/}
@@ -76,6 +75,11 @@ export function TableGridCell(props) {
 
     if (props.bookingInfo !== undefined) {
 
+        console.log('!!!!',props.bookingInfo);
+
+        // TODO Артур что-то нахимичил со статусами. ставим пока костыль, блин
+        if (props.bookingInfo.status.status !== undefined) props.bookingInfo.status = props.bookingInfo.status.status;
+
         switch (props.bookingInfo.status) {
             case 'booked':
                 info.statusClass='status--booked';
@@ -87,6 +91,8 @@ export function TableGridCell(props) {
                 info.statusClass='status--arrived';
                 break;
             default:
+
+
         }
 
         info.bookedText = props.bookingInfo.numGuests;
