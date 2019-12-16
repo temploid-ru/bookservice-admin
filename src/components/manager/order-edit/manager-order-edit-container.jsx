@@ -14,7 +14,7 @@ export function defineOrderData(props, orderInfo, tableId) {
         duration: 2,
         date: props.showDate.currentDate,
         guests: 2,
-        table: '5db8169290b63cd40c7144fb',
+        table: false,
         clientName: "",
         clientPhone: "",
         deposit: false,
@@ -152,7 +152,7 @@ export function convertDurationInHours(dateStart, dateEnd) {
     return moment(dateEnd).diff(moment(dateStart), 'h');
 }
 
-export function saveOrder(order, token) {
+export function saveOrder(order, token, setAlert) {
 
     let timecode = order.date;
     timecode = timecode.replace('00:00:00', order.time + ":00");
@@ -164,7 +164,7 @@ export function saveOrder(order, token) {
         "timecode": timecode,
         "num_guests": parseInt(order.guests),
         "duration": duration,
-        "deposit": parseFloat(order.deposit), // !!!! не вижу в bookingEdit
+        "deposit": parseFloat(order.deposit) || 0, // !!!! не вижу в bookingEdit
         "ps_token": '', // !!!! не вижу в bookingEdit
         "client": {
             "name": order.clientName,
@@ -173,18 +173,66 @@ export function saveOrder(order, token) {
         }
     };
 
+    let alertText = '';
+
     if (order.id) {
         body.method = "BookingEdit";
         body.id = order.id;
+        alertText = "Бронь изменена";
 
     } else {
         body.method = "BookingAdd";
         body.table_id = order.table;
+        alertText = "Столик забронирован";
     }
 
     fetch(API_POINT + "/bookings", {method: 'post', body: JSON.stringify(body)})
-        .then(r => r.json()).then(json => {
-        alert('Данные сохранены, сделать popUp');
-        console.log('json response', json)
+        .then(r => r.json()).then(json => setAlert(alertText));
+}
+
+/**
+ * Генерируем список доступных столиков
+ */
+export function generateTablesList(order, tablesList, bookings) {
+    const tables = tablesList.filter(table => {
+
+        let flag = true;
+
+        // Фильтруем чтобы количество гостей было не меньше количества мест за столом
+        if (table.number_of_persons < order.guests) return false;
+
+        // Отсеиваем столы по желаемому времени бронирования
+        flag = filterByTime(bookings.filter(booking => booking.tableID === table.id), order);
+
+        return flag;
     });
+
+    return tables;
+}
+
+/**
+ * Проверяем, попали ли мы в текущие брони у стола
+ *
+ * @param bookings
+ * @param order
+ * @return {boolean}
+ */
+function filterByTime(bookings, order) {
+
+    for (let booking of bookings) {
+        const orderStart = order.date.replace('00:00:00', order.time + ":00");
+
+        const orderTime = moment(orderStart);
+
+        const bookingStart = moment(booking.dateStart);
+        const bookingEnd = moment(booking.dateEnd);
+
+        if (orderTime.isBetween(bookingStart, bookingEnd, null, '[]')) return false;
+
+        orderTime.add(order.duration, 'h');
+
+        if (orderTime.isBetween(bookingStart, bookingEnd, null, '[]')) return false;
+    }
+
+    return true;
 }

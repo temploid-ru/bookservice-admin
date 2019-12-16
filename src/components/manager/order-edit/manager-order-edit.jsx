@@ -9,79 +9,117 @@ import {
 } from "./manager-order-edit-view";
 import {
     calculateWorkTime,
-    defineOrderData,
+    defineOrderData, generateTablesList,
     getOrderDates, saveOrder
-} from "./manager-order-container";
+} from "./manager-order-edit-container";
 import {connect} from 'react-redux';
 
 import './manager-order.scss';
 import moment from "moment";
+import OrderTablesList from "./table-select";
 
 function ManagerOrderEdit(props) {
+
+    const [alert, setAlert] = useState('');
+
+    const [showTablesList, setShowTablesList] = useState(false);
+
     const {orderId, tableId} = props.match.params;
 
     const [order, setOrder] = useState(defineOrderData(props, props.bookingInfo.filter(item => item.id === orderId)[0], tableId));
 
-    console.log("order", order);
+    const tablesList = generateTablesList(order, props.tablesList, props.bookingInfo);
 
-    return (
-        <div className="order-edit">
-            <div className="order-edit__title">Забронировать столик</div>
+    function updateTable(v) {
+        setOrder({...order, table: v});
+        setShowTablesList(false);
+    }
 
-            <OrderDate
-                items={getOrderDates(props.showDate.currentDate)}
-                currentDate={props.showDate.currentDate}
-                orderDate={order.date}
-                updateHandler={v => setOrder({...order, date: v})}
-            />
+    if (showTablesList) {
+        return <OrderTablesList
+            toBack={() => setShowTablesList(false)}
+            tablesList={tablesList}
+            setTable={v => updateTable(v)}
+        />
+    } else {
 
+        if (alert !== '') {
+            setTimeout(()=> {
+                window.location.href='/manager/';
+                setAlert('');
 
-            <OrderTime
-                workTime={calculateWorkTime(
-                    order.date,
-                    props.workTime,
-                    props.bookingInterval
-                )}
-                orderTime={order.time}
-                updateHandler={v => setOrder({...order, time: v})}
-            />
+            },1000);
+            return (
+                <div className="order-alert">
+                    <div className="order-alert__content">{alert}</div>
+                </div>
+            )
+        } else {
 
-            <OrderGuestCounter
-                countGuests={order.guests}
-                updateHandler={v => setOrder({...order, guests: v})}
-            />
+            return (
+                <div className="order-edit">
+                    <div className="order-edit__title">Забронировать столик</div>
 
-            <OrderDuration duration={order.duration}
-                           updateHandler={v => setOrder({...order, duration: v})}/>
-
-            <OrderTableSelect
-                table={order.table}
-                deleteTable={() => setOrder({...order, table: false})}
-            />
-
-            <OrderClientInfo
-                clientName={order.clientName}
-                clientPhone={order.clientPhone}
-                setName={v => setOrder({...order, clientName: v})}
-                setPhone={v => setOrder({...order, clientPhone: v})}
-            />
-            <OrderDeposit
-                deposit={order.deposit}
-                updateHandler={v => setOrder({...order, deposit: v})}
-            />
-            <OrderComment
-                comment={order.comment}
-                updateHandler={v => setOrder({...order, comment: v})}
-            />
-
-            <div className="order-edit__buttons">
-                <div className="order-edit__btn-back" onClick={() => props.history.goBack()}>Отмена</div>
-                <div className="order-edit__btn-order" onClick={() => saveOrder(order, props.token)}>Забронировать</div>
-            </div>
+                    <OrderDate
+                        items={getOrderDates(props.showDate.currentDate)}
+                        currentDate={props.showDate.currentDate}
+                        orderDate={order.date}
+                        updateHandler={v => setOrder({...order, date: v})}
+                    />
 
 
-        </div>
-    )
+                    <OrderTime
+                        workTime={calculateWorkTime(
+                            order.date,
+                            props.workTime,
+                            props.bookingInterval
+                        )}
+                        orderTime={order.time}
+                        updateHandler={v => setOrder({...order, time: v})}
+                    />
+
+                    <OrderGuestCounter
+                        countGuests={order.guests}
+                        updateHandler={v => setOrder({...order, guests: v})}
+                    />
+
+                    <OrderDuration duration={order.duration}
+                                   updateHandler={v => setOrder({...order, duration: v})}/>
+
+                    <OrderTableSelect
+                        tablesList={tablesList}
+                        table={order.table}
+                        deleteTable={() => setOrder({...order, table: false})}
+                        showTableSelector={() => setShowTablesList(true)}
+                    />
+
+                    <OrderClientInfo
+                        clientName={order.clientName}
+                        clientPhone={order.clientPhone}
+                        setName={v => setOrder({...order, clientName: v})}
+                        setPhone={v => setOrder({...order, clientPhone: v})}
+                    />
+                    <OrderDeposit
+                        deposit={order.deposit}
+                        updateHandler={v => setOrder({...order, deposit: v})}
+                    />
+                    <OrderComment
+                        comment={order.comment}
+                        updateHandler={v => setOrder({...order, comment: v})}
+                    />
+
+                    <div className="order-edit__buttons">
+                        <div className="order-edit__btn-back" onClick={() => props.history.goBack()}>Отмена</div>
+                        <div className="order-edit__btn-order"
+                             onClick={() => saveOrder(order, props.token, setAlert)}>Забронировать
+                        </div>
+                    </div>
+
+
+                </div>
+            )
+        }
+    }
 }
 
 const mapStateToProps = (state /*, ownProps*/) => {

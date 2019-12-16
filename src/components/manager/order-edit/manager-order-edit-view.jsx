@@ -134,37 +134,43 @@ export function OrderDuration(props) {
 }
 
 export function OrderTableSelect(props) {
-
     if (props.table === false) {
-
-        const available = '2 свободно';
-
+        const available = props.tablesList.length + ' свободно';
         return (
             <div className="order-table-select">
                 <div className="order-table-select__header">
                     <div className="order-table-select__title">Столик</div>
                     <div className="order-table-select__available">{available}</div>
                 </div>
-                <div className="order-table-select__body">
+                <div className="order-table-select__body" onClick={() => props.showTableSelector()}>
                     <div className="order-table-select__button"/>
                     <div className="order-table-select__button-text">Добавить столик</div>
                 </div>
             </div>
         )
     } else {
-        return (
-            <div className="order-table-select">
-                <div className="order-table-select__header">
-                    <div className="order-table-select__title">Столик</div>
-                    <div className="order-table-select__сurrent-table">22</div>
+
+        const table = props.tablesList.filter(table => table.id === props.table)[0];
+
+        if (table === undefined) {
+            return (<div>ERROR: Стол не найден, такого быть не должно</div>)
+        } else {
+            return (
+                <div className="order-table-select">
+                    <div className="order-table-select__header">
+                        <div className="order-table-select__title">Столик</div>
+                        <div className="order-table-select__сurrent-table">{table.number}</div>
+                    </div>
+                    <div className="order-table-select__body-choose">
+                        <div className="order-table-select__number">{table.number}</div>
+                        <div className="order-table-select__edit" onClick={() => props.showTableSelector()}>Изменить
+                        </div>
+                        <div className="order-table-select__delete" onClick={() => props.deleteTable()}><SvgDelete/>
+                        </div>
+                    </div>
                 </div>
-                <div className="order-table-select__body-choose">
-                    <div className="order-table-select__number">22 cтолик</div>
-                    <div className="order-table-select__edit">Изменить</div>
-                    <div className="order-table-select__delete" onClick={()=>{props.deleteTable()}}><SvgDelete/></div>
-                </div>
-            </div>
-        )
+            )
+        }
     }
 }
 
@@ -208,3 +214,4 @@ export function OrderComment(props) {
         </div>
     )
 }
+
