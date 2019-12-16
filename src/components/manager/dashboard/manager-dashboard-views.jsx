@@ -75,8 +75,6 @@ export function TableGridCell(props) {
 
     if (props.bookingInfo !== undefined) {
 
-        console.log('!!!!',props.bookingInfo);
-
         // TODO Артур что-то нахимичил со статусами. ставим пока костыль, блин
         if (props.bookingInfo.status.status !== undefined) props.bookingInfo.status = props.bookingInfo.status.status;
 
