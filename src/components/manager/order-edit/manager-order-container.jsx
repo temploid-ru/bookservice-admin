@@ -80,8 +80,10 @@ export function getOrderDates(currentDate) {
         // Добиваем фэйки до конца недели
         const countLastDates = 7 - (result.length % 7);
 
-        for (let i = 0; i < countLastDates; i++) {
-            result.push({});
+        if (countLastDates < 7) {
+            for (let i = 0; i < countLastDates; i++) {
+                result.push({});
+            }
         }
 
         sessionStorage.setItem(storageKey, JSON.stringify(result));
@@ -104,7 +106,13 @@ export function getOrderDates(currentDate) {
  * @param bookingInterval
  * @return {[]}
  */
-export function calculateWorkTime(date, startTime, endTime, bookingInterval) {
+export function calculateWorkTime(date, workTime, bookingInterval) {
+
+    const datOfWeek = moment(date).format('e');
+    console.log();
+
+    const startTime = workTime[datOfWeek].start_time;
+    const endTime = workTime[datOfWeek].end_time;
 
     const storageKey = 'order_workTime_' + date;
 
@@ -176,7 +184,7 @@ export function saveOrder(order, token) {
 
     fetch(API_POINT + "/bookings", {method: 'post', body: JSON.stringify(body)})
         .then(r => r.json()).then(json => {
-            alert('Данные сохранены, сделать popUp');
+        alert('Данные сохранены, сделать popUp');
         console.log('json response', json)
     });
 }

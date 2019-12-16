@@ -16,7 +16,7 @@ function AdminHomeEditWorkTime(props) {
 
     function readOnlyChange(){
 
-        if (readOnly){
+        if (!readOnly){
             props.updateWorkTime(workTimeList);
         }
 

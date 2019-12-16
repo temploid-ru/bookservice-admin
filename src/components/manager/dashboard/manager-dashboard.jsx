@@ -9,10 +9,6 @@ import {SHOW_DATE__SET} from "../../../constants/manager";
 import moment from "moment";
 
 function ManagerDashboard(props) {
-
-    console.log('ManagerDashboard',props);
-
-
     return (
         <div>
             <SearchButton/>
@@ -38,7 +34,7 @@ const mapStateToProps = (state /*, ownProps*/) => {
         bookingInfo: bookingInfo,
         bookingInterval: state.info.companyInfo.bookingInterval,
         tablesList: state.info.tablesList,
-        workTime: state.info.workTime,
+        workTime: state.info.companyInfo.workdays[moment(activeDate).format('e')],
         showDate: state.showDate,
     }
 };

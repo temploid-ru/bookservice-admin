@@ -39,8 +39,7 @@ function ManagerOrderEdit(props) {
             <OrderTime
                 workTime={calculateWorkTime(
                     order.date,
-                    props.workTime.startTime,
-                    props.workTime.endTime,
+                    props.workTime,
                     props.bookingInterval
                 )}
                 orderTime={order.time}
@@ -89,7 +88,7 @@ const mapStateToProps = (state /*, ownProps*/) => {
     return {
         bookingDuration: state.info.companyInfo.bookingDuration,
         bookingInterval: state.info.companyInfo.bookingInterval,
-        workTime: state.info.workTime,
+        workTime: state.info.companyInfo.workdays,
         bookingInfo: state.bookingInfo.itemsx[moment(state.showDate.activeDate).format("YYYY-MM-DD")],
         showDate: state.showDate,
         token: state.auth.token,

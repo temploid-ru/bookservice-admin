@@ -26,21 +26,17 @@ export function getTableGrid(props) {
 
     const workTimeLine = generateWorkTimeGrid(workTime, showDate, props.bookingInterval);
 
-    console.log('workTimeLine',workTimeLine);
-
     const {bookingInfo} = props;
-
-    console.log('bookingInfo', bookingInfo);
 
     for (let table of props.tablesList) {
 
         const orderItems = bookingInfo.filter(item => item.tableID === table.id);
 
+
         //TODO разобраться почему не копируется а заменяется объект потому пока костыль
         // let timeline = {...workTimeLine, id:table.id};
         // const timeline = Object.assign({'id':table.id},workTimeLine);
         const timeline = JSON.parse(workTimeLine);
-
 
         for (let booking of orderItems) {
 
@@ -60,8 +56,6 @@ export function getTableGrid(props) {
 
             timeline[startCell].gridSpan = gridSpan;
             timeline[startCell].bookingInfo = booking;
-
-            console.log('timeline', timeline);
         }
 
         const gridItem = {
@@ -85,20 +79,21 @@ export function getTableGrid(props) {
  * @param gridStep
  * @returns {[]}
  */
-export function generateWorkTimeGrid(workTime, activeDate, gridStep) {
+export function generateWorkTimeGrid(workTime, showTime, gridStep) {
 
-    let {startTime, endTime} = workTime;
+    let {start_time, end_time} = workTime;
 
     const result = {};
 
-    while (startTime < endTime) {
+    while (start_time < end_time) {
 
-        const time = moment(activeDate).add(startTime, 's');
+        const time = moment(showTime.activeDate).add(start_time, 's');
 
         const timeStamp = +time.format('x');
 
-        result[timeStamp] = {timeStamp};
-        startTime += gridStep;
+        result[timeStamp] = {timeStamp, V:time.format()};
+
+        start_time += gridStep;
     }
 
     return JSON.stringify(result);
