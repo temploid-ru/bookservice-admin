@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {SvgGuest} from "../../../../assets/svg";
 import {declOfNum} from "../../utils/utils";
+import {getFilterVariants} from "./manager-order-edit-table-list-container";
 
 export function OrderTablesListTabs(props) {
 
@@ -22,14 +23,13 @@ export function OrderTablesListFilter(props) {
 
     const isActive = props.current === false ? 'is-active' : '';
 
-    const filterVariants = [2, 3];
+    const filterVariants = getFilterVariants(props.tablesList);
 
     return (
         <ul className="order-table-list-filter">
             <li className={isActive} onClick={() => props.setFilter(false)} key="defaultValue">Все</li>
             {
                 filterVariants.map(item => {
-
                     const isActive = props.current === item ? "is-active" : "";
 
                     return <li className={isActive} key={item} onClick={() => props.setFilter(item)}>
@@ -43,8 +43,6 @@ export function OrderTablesListFilter(props) {
 }
 
 export function OrderTablesListItems(props) {
-
-    console.log('props', props)
 
     return (
         <ul className="order-table-list-items">

@@ -14,9 +14,6 @@ export default function OrderTablesList(props) {
 
     const [filter, setFilter] = useState(false);
 
-    console.log('activeTab', props);
-    console.log('filter', filter);
-
     const orderTablesListTabs = <div>
         <OrderTablesListTabs
             activeTab={activeTab}
@@ -36,11 +33,13 @@ export default function OrderTablesList(props) {
                 </div>
             )
         default:
+
             return (
                 <div className="order-tables-list">
                     {orderTablesListTabs}
                     <div className="order-tables-list__body">
                         <OrderTablesListFilter
+                            tablesList={props.tablesList}
                             current={filter}
                             setFilter={v => setFilter(v)}/>
 
