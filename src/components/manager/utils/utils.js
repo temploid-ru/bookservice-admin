@@ -47,3 +47,14 @@ export const declOfNum = (number, titles) => {
     const cases = [2, 0, 1, 1, 1, 2];
     return titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]];
 };
+
+/** Проверяем не мертвый ли токен, если да - удаляем данные из sessionStorage и перегружаем страницу*/
+export function isTokenWrong(json) {
+
+    console.log(json.error)
+
+    if (json.error && json.error_message === 'Wrong token. Get a new one.') {
+        sessionStorage.removeItem('token');
+        window.location.reload();
+    }
+}

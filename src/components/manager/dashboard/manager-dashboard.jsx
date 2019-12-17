@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 
 import {Calendar, NewOrder, SearchButton, TableGrid} from "./manager-dashboard-views";
@@ -7,58 +7,75 @@ import './manager-dashboard.scss';
 import {getActiveDayText, getTableGrid, updateActiveDate} from "./manager-dashboard-container";
 import {SHOW_DATE__SET} from "../../../constants/manager";
 import moment from "moment";
-import Preloader from "../../preloader";
 import {API_POINT} from "../../../constants";
+import {isTokenWrong} from "../utils/utils";
 
 function ManagerDashboard(props) {
 
-    const [orders, setOrder] = useState([]);
+    const [oldBookings, setOldBookings] = useState([]);
 
-    const bookingInfo = (moment(props.showDate.activeDate) < moment(props.showDate.currentDate))
-        ? orders
-        : props.bookingInfo;
+    const {activeDate, currentDate} = props.showDate;
+    const isShowOldBookingInfo = moment(activeDate) < moment(currentDate);
 
-    const [preloader, setPreloader] = useState((orders.length === 0));
+    useEffect(
+        () => {
+            if (isShowOldBookingInfo) {
 
-    if (preloader) {
+                const storeKey = 'BookingInfo__' + activeDate;
 
-        fetch(API_POINT + '/bookings', {
-            method: 'post',
-            body: JSON.stringify({
-                "method": "BookingList",
-                "token": props.token,
-                "timecode_from": moment(props.showDate.activeDate).format(),
-                "timecode_to": moment(props.showDate.activeDate).add(1, "d").format(),
-            })
-        }).then(r => r.json()).then(json => {
-            console.log('json', json);
-            setOrder(json.items);
-            setPreloader(false);
-        });
+                const sessionInfo = sessionStorage.getItem(storeKey);
 
-        return <Preloader/>
-    } else {
+                if (sessionInfo !== JSON.stringify(oldBookings)) {
+                    const body = {
+                        "method": "BookingList",
+                        "token": props.token,
+                        "timecode_from": activeDate,
+                        "timecode_to": moment(activeDate).add(1, 'd').format(),
+                    };
 
-        return (
-            <div>
-                <SearchButton/>
+                    fetch(API_POINT + '/bookings', {method: 'post', body: JSON.stringify(body)})
+                        .then(r => r.json()).then(json => {
+                        isTokenWrong(json);
 
-                <Calendar text={getActiveDayText(props.showDate)}
-                          changeDay={value => updateActiveDate(props.showDate, value, props.setDate)}/>
+                        const date = moment(activeDate).format('YYYY-MM-DD');
 
-                <TableGrid
-                    items={getTableGrid(props)}
-                    bookingInfo={bookingInfo}
-                />
-                <NewOrder/>
-            </div>
-        )
-    }
+                        if (!json.error) {
+                            sessionStorage.setItem(storeKey, JSON.stringify(json.items[date]));
+                            setOldBookings(json.items[date]);
+
+                        }
+                    });
+                }
+
+            }
+        }
+    );
+
+    console.log('ManagerDashboard',props);
+
+    const bookingInfo = (isShowOldBookingInfo) ? oldBookings : props.bookingInfo;
+
+    return (
+        <div>
+            <SearchButton/>
+
+            <Calendar text={getActiveDayText(props.showDate)}
+                      changeDay={value => updateActiveDate(props.showDate, value, props.setDate)}/>
+
+            <TableGrid
+                items={getTableGrid(props, bookingInfo)}
+                bookingInfo={bookingInfo}
+            />
+            <NewOrder/>
+        </div>
+    )
 }
 
 const mapStateToProps = (state /*, ownProps*/) => {
 
     const {activeDate} = state.showDate;
+
+    console.log('mapState',activeDate);
 
     let bookingInfo = state.bookingInfo.itemsx[moment(activeDate).format('YYYY-MM-DD')] || [];
 

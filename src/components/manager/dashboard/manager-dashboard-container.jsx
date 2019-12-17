@@ -19,14 +19,14 @@ import showDate from "../../../reducers/manager/show-date";
  * @return {{}}
  */
 
-export function getTableGrid(props) {
+export function getTableGrid(props, bookingInfo) {
     const result = [];
 
     const {workTime, showDate} = props;
 
     const workTimeLine = generateWorkTimeGrid(workTime, showDate, props.bookingInterval);
 
-    const {bookingInfo} = props;
+    console.warn('---------------------------------------', showDate.activeDate);
 
     for (let table of props.tablesList) {
 
@@ -37,6 +37,8 @@ export function getTableGrid(props) {
         // let timeline = {...workTimeLine, id:table.id};
         // const timeline = Object.assign({'id':table.id},workTimeLine);
         const timeline = JSON.parse(workTimeLine);
+
+        console.log('orderItems', orderItems);
 
         for (let booking of orderItems) {
 
@@ -54,8 +56,10 @@ export function getTableGrid(props) {
                 deleteFrom += step;
             }
 
-            timeline[startCell].gridSpan = gridSpan;
-            timeline[startCell].bookingInfo = booking;
+            if (timeline[startCell] !== undefined) {
+                timeline[startCell].gridSpan = gridSpan;
+                timeline[startCell].bookingInfo = booking;
+            }
         }
 
         const gridItem = {
@@ -68,6 +72,9 @@ export function getTableGrid(props) {
         result.push({...gridItem});
 
     }
+
+    console.log('orderItems', '------------------------------------------------------');
+
     return result;
 }
 
@@ -81,21 +88,17 @@ export function getTableGrid(props) {
  */
 export function generateWorkTimeGrid(workTime, showTime, gridStep) {
 
-    let {start_time, end_time} = workTime;
-
     const result = {};
 
-    while (start_time < end_time) {
+    let time = moment(showTime.activeDate).add(workTime.start_time, 's');
+    const endWorkDate = moment(showTime.activeDate).add(workTime.end_time, 's');
 
-        const time = moment(showTime.activeDate).add(start_time, 's');
-
+    while (time < endWorkDate) {
         const timeStamp = +time.format('x');
+        result[timeStamp] = {timeStamp, V: time.format()};
 
-        result[timeStamp] = {timeStamp, V:time.format()};
-
-        start_time += gridStep;
+        time.add(gridStep, 's');
     }
-
     return JSON.stringify(result);
 }
 
@@ -112,9 +115,8 @@ export const getActiveDayText = (showDate) => {
     return result
 };
 
-export function updateActiveDate(showDate, newValue, setStateAction) {
+export function updateActiveDate(showDate, newValue, setStoreAction) {
     const activeDate = moment(showDate.activeDate).add(newValue, 'd').format();
-
-    setStateAction({...showDate, activeDate})
+    setStoreAction({...showDate, activeDate})
 
 }

@@ -1,5 +1,6 @@
 import {API_POINT} from "../../constants";
 import moment from "moment";
+import {isTokenWrong} from "./utils/utils";
 
 /**
  * Получаем данные о компании
@@ -22,7 +23,7 @@ export function getCompanyInfo(token) {
             console.error(json.error_message);
             return null;
         } else {
-            return(json.items[0]);
+            return (json.items[0]);
         }
 
     });
@@ -42,13 +43,15 @@ export function getWorkTime(date, token) {
 
     return fetch(API_POINT, {method: "post", body: JSON.stringify({method: "getWorkTime", token, date: shortDate})})
         .then(res => res.json()).then(json => {
+            isTokenWrong(json);
 
-            const {items} = json;
+            if (!json.error) {
+                const {items} = json;
+                const startTime = moment(items[0].value).diff(moment(date), 'seconds');
+                const endTime = moment(items[items.length - 1].value).diff(moment(date), 'seconds');
 
-            const startTime = moment(items[0].value).diff(moment(date), 'seconds');
-            const endTime = moment(items[items.length - 1].value).diff(moment(date), 'seconds');
-
-            return {startTime, endTime};
+                return {startTime, endTime};
+            }
         });
 }
 
@@ -72,42 +75,3 @@ export function getTablesList(showDate, token) {
         .then(res => res.json()).then(json => json.items);
 
 }
-
-
-// /**
-//  * Получаем информацию о бронировании
-//  *
-//  * @param showDate
-//  * @param token
-//  */
-// export function getBookingInfo(showDate, token) {
-//     const body = {
-//         "method": 'tablesSearch', token,
-//         "timecode": moment(showDate).format('YYYY-MM-DD'),
-//     };
-//
-//     return fetch(API_POINT, {method: "post", body: JSON.stringify(body)})
-//         .then(res => res.json()).then(json => {
-//
-//         const bookingInfo = {};
-//
-//         for (let table of json.items) {
-//
-//             for (let bookingItem of table.booking_entries) {
-//
-//                 if (bookingInfo[table.id] === undefined) bookingInfo[table.id] = [];
-//                 console.log('bookingItem',bookingItem);
-//                 const item = {
-//                     startTime: +moment(bookingItem.date_start).format('x'),
-//                     endTime: +moment(bookingItem.date_end).format('x'),
-//                     orderId: bookingItem.id,
-//
-//                 };
-//
-//                 bookingInfo[table.id].push(item);
-//             }
-//         }
-//
-//         return bookingInfo;
-//     });
-// }
