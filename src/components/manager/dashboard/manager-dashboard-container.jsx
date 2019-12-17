@@ -26,8 +26,6 @@ export function getTableGrid(props, bookingInfo) {
 
     const workTimeLine = generateWorkTimeGrid(workTime, showDate, props.bookingInterval);
 
-    console.warn('---------------------------------------', showDate.activeDate);
-
     for (let table of props.tablesList) {
 
         const orderItems = bookingInfo.filter(item => item.tableID === table.id);
@@ -37,8 +35,6 @@ export function getTableGrid(props, bookingInfo) {
         // let timeline = {...workTimeLine, id:table.id};
         // const timeline = Object.assign({'id':table.id},workTimeLine);
         const timeline = JSON.parse(workTimeLine);
-
-        console.log('orderItems', orderItems);
 
         for (let booking of orderItems) {
 
@@ -72,8 +68,6 @@ export function getTableGrid(props, bookingInfo) {
         result.push({...gridItem});
 
     }
-
-    console.log('orderItems', '------------------------------------------------------');
 
     return result;
 }

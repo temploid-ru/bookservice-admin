@@ -51,8 +51,6 @@ function ManagerDashboard(props) {
         }
     );
 
-    console.log('ManagerDashboard',props);
-
     const bookingInfo = (isShowOldBookingInfo) ? oldBookings : props.bookingInfo;
 
     return (
@@ -74,8 +72,6 @@ function ManagerDashboard(props) {
 const mapStateToProps = (state /*, ownProps*/) => {
 
     const {activeDate} = state.showDate;
-
-    console.log('mapState',activeDate);
 
     let bookingInfo = state.bookingInfo.itemsx[moment(activeDate).format('YYYY-MM-DD')] || [];
 

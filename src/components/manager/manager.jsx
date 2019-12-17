@@ -5,6 +5,8 @@ import {getCompanyInfo, getWorkTime, getTablesList} from "./manager-container";
 import ManagerWebsocket from "./websocket/manager-websocket";
 import {INFO__SET_DATA} from "../../constants/manager";
 
+import './manager.scss'
+
 function Manager(props) {
 
     if (props.info === null) {
@@ -22,7 +24,7 @@ function Manager(props) {
 
         return <Preloader/>
     } else {
-        return <ManagerWebsocket/>
+        return <div className="container"><ManagerWebsocket/></div>
     }
 
 

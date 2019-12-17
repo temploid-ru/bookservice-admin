@@ -29,7 +29,6 @@ export function Calendar(props) {
 }
 
 export function TableGrid(props) {
-    console.log('props',props);
     return (
         <table className="dashboard">
             {/*<thead>*/}
