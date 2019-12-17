@@ -15,8 +15,8 @@ import {
 import {connect} from 'react-redux';
 
 import './manager-order.scss';
-import moment from "moment";
 import OrderTablesList from "./table-select";
+import {mapStateToProps} from './manager-order-edit-redux';
 
 function ManagerOrderEdit(props) {
 
@@ -24,9 +24,14 @@ function ManagerOrderEdit(props) {
 
     const [showTablesList, setShowTablesList] = useState(false);
 
-    const {orderId, tableId} = props.match.params;
-
-    const [order, setOrder] = useState(defineOrderData(props, props.bookingInfo.filter(item => item.id === orderId)[0], tableId));
+    // Текущая бронь
+    const [order, setOrder] = useState(
+        defineOrderData(
+            props.showDate.currentDate,
+            props.bookingInfo,
+            props.tableId
+        )
+    );
 
     const tablesList = generateTablesList(order, props.tablesList, props.bookingInfo);
 
@@ -44,18 +49,17 @@ function ManagerOrderEdit(props) {
     } else {
 
         if (alert !== '') {
-            setTimeout(()=> {
-                window.location.href='/manager/';
+            setTimeout(() => {
+                window.location.href = '/manager/';
                 setAlert('');
 
-            },1000);
+            }, 1000);
             return (
                 <div className="order-alert">
                     <div className="order-alert__content">{alert}</div>
                 </div>
             )
         } else {
-
             return (
                 <div className="order-edit">
                     <div className="order-edit__title">Забронировать столик</div>
@@ -122,16 +126,6 @@ function ManagerOrderEdit(props) {
     }
 }
 
-const mapStateToProps = (state /*, ownProps*/) => {
-    return {
-        bookingDuration: state.info.companyInfo.bookingDuration,
-        bookingInterval: state.info.companyInfo.bookingInterval,
-        workTime: state.info.companyInfo.workdays,
-        bookingInfo: state.bookingInfo.itemsx[moment(state.showDate.activeDate).format("YYYY-MM-DD")],
-        showDate: state.showDate,
-        token: state.auth.token,
-        tablesList: state.info.tablesList,
-    }
-};
+
 
 export default connect(mapStateToProps, null)(ManagerOrderEdit);

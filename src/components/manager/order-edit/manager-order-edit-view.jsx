@@ -54,7 +54,6 @@ export function OrderTime(props) {
             <div className="order-time__title">Время</div>
             <ul>
                 {props.workTime.map(item => {
-
                     const isActive = (item.value === props.orderTime) ? 'is-active' : '';
 
                     if (currentTime > item.timestamp)

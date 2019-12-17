@@ -2,43 +2,64 @@ import moment from "moment";
 import {API_POINT} from "../../../constants";
 
 /**
+ * Определяем минимальное время для бронирования
+ *
+ * @return {string}
+ */
+function defineTime() {
+
+    let m = moment();
+    let time = m.clone().diff(m.clone().startOf('hour'), 'm');
+
+    if (time < 30) {
+        time = m.startOf('hour').add(30, 'm');
+    } else {
+        time = m.startOf('hour').add(1, 'h');
+    }
+    time = time.format('HH:mm');
+
+    return time;
+}
+
+/**
  * Определяем дефолтные данные для манипулирования заказом
  *
  * @param props
  */
-export function defineOrderData(props, orderInfo, tableId) {
-
-    const result = {
-        id: false,
-        time: false,
-        duration: 2,
-        date: props.showDate.currentDate,
-        guests: 2,
-        table: false,
-        clientName: "",
-        clientPhone: "",
-        deposit: false,
-        comment: ''
-    };
-
+export function defineOrderData(currentDate, orderInfo, tableId) {
+    //Если заказ существует
     if (orderInfo) {
         const dateStart = moment(orderInfo.dateStart);
         const dateEnd = moment(orderInfo.dateEnd);
-        result.id = orderInfo.id;
 
-        //  result.time и result.date не менять метами, т.к. иначе будет сброс начало дня
-        result.time = dateStart.format('HH:mm');
-        result.duration = dateEnd.diff(dateStart, 'h');
+        return {
+            id: orderInfo.id,
+            time: dateStart.format('HH:mm'),
+            duration: dateEnd.diff(dateStart, 'h'),
+            date: dateStart.clone.startOf('day').format(),
+            guests: orderInfo.numGuests,
+            table: tableId,
+            clientName: orderInfo.clientName,
+            clientPhone: orderInfo.clientPhone,
+            deposit: orderInfo.deposit,
+            comment: orderInfo.clientComment,
+        }
 
-        result.date = dateStart.startOf('day').format();
-        result.guests = orderInfo.numGuests;
-        result.table = tableId;
-        result.clientName = orderInfo.clientName;
-        result.clientPhone = orderInfo.clientPhone;
-        result.deposit = orderInfo.deposit;
-        result.comment = orderInfo.clientComment;
+    } else {
+        return {
+            id: false,
+            time: defineTime(),
+            duration: 2,
+            date: currentDate,
+            guests: 2,
+            table: false,
+            clientName: "",
+            clientPhone: "",
+            deposit: false,
+            comment: ''
+        };
+
     }
-    return result;
 }
 
 /**
@@ -202,7 +223,9 @@ export function generateTablesList(order, tablesList, bookings) {
         if (table.number_of_persons < order.guests) return false;
 
         // Отсеиваем столы по желаемому времени бронирования
-        flag = filterByTime(bookings.filter(booking => booking.tableID === table.id), order);
+        if (bookings) {
+            flag = filterByTime(bookings.filter(booking => booking.tableID === table.id), order);
+        }
 
         return flag;
     });

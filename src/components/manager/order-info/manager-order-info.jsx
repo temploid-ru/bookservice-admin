@@ -13,6 +13,9 @@ function ManagerOrderInfo(props) {
 
     const isTwoButtons = bookingInfo.status.button ? '':' two-buttons';
 
+
+
+
     return (
         <div className={"order-info " + bookingInfo.status.statusClass}>
             <div className="order-info__status">{bookingInfo.status.statusText}</div>
