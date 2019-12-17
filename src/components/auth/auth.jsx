@@ -31,8 +31,8 @@ function Auth(props) {
                 </div>
             </div>
 
-            <div>supadmin</div>
-            <div>MOOp+pjA4P9K</div>
+            {/*<div>supadmin</div>*/}
+            {/*<div>MOOp+pjA4P9K</div>*/}
 
         </div>
     )
