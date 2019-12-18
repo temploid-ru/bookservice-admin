@@ -33,9 +33,7 @@ function ManagerOrderEdit(props) {
         )
     );
 
-    console.log(order);
-
-    const tablesList = generateTablesList(order, props.tablesList, props.bookingInfo);
+    const tablesList = generateTablesList(order, props.tablesList, props.allBookingsInfo[order.date]);
 
     function updateTable(v) {
         setOrder({...order, table: v});

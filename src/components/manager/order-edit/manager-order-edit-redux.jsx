@@ -21,6 +21,7 @@ export const mapStateToProps = (state, ownProps/*, ownProps*/) => {
         bookingInterval: state.info.companyInfo.bookingInterval,
         workTime: state.info.companyInfo.workdays,
         bookingInfo,
+        allBookingsInfo:state.bookingInfo,
         showDate: state.showDate,
         token: state.auth.token,
         tablesList: state.info.tablesList,
