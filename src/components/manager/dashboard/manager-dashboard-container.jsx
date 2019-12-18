@@ -1,5 +1,4 @@
 import moment from "moment";
-import showDate from "../../../reducers/manager/show-date";
 
 /**
  * Формируем массив сетки

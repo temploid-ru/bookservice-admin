@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {SvgGuest} from "../../../../assets/svg";
 import {declOfNum} from "../../utils/utils";
 import {getFilterVariants} from "./manager-order-edit-table-list-container";

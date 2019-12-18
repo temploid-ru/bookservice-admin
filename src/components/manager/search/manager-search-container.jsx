@@ -28,6 +28,8 @@ export function searchOrders(searchText, bookingInfo, tableId2TableNumber) {
             buttonText: status.buttonText,
         };
         result.push(orderItem);
+
+        return result;
     });
 
     return result;

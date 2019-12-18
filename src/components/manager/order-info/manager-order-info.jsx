@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {SvgDelete, SvgEdit, SvgOk} from "../../../assets/svg";
+import {SvgDelete, SvgEdit} from "../../../assets/svg";
 import {Link} from 'react-router-dom';
 import moment from "moment";
 import './manager-order-info.scss';
