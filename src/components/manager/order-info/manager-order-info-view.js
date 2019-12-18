@@ -21,7 +21,7 @@ export function ManagerOrderInfoButtons(props) {
 
         if (props.nextStatus) {
             buttons.push(
-                <div className="order-info__btn order-info__status-color"
+                <div className="order-info__btn order-info__status-color" key='changeStatus'
                      onClick={() => updateState(props.orderId, props.nextStatus, props.token)}>
                     <div className="order-info__icon"><SvgOk/></div>
                     <div className="order-info__text">{props.buttonText}</div>

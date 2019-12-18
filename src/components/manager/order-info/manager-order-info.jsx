@@ -11,7 +11,6 @@ import {BOOKING__SET_DATA} from "../../../constants/manager";
 import {ManagerOrderInfoButtons} from "./manager-order-info-view";
 
 function ManagerOrderInfo(props) {
-    console.log('props', props);
 
     const {bookingInfo} = props;
 
@@ -55,7 +54,7 @@ function ManagerOrderInfo(props) {
                     <ManagerOrderInfoButtons
                         activeDate={props.activeDate}
                         currentDate={props.currentDate}
-                        props={table.id}
+                        tableId={table.id}
                         orderId={orderId}
                         nextStatus={order.statusTexts.nextStatus}
                         token={props.token}

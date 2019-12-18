@@ -37,12 +37,8 @@ export function prepareBookingInfo(order, table, currentDate, token) {
     order.dateText += moment(order.dateStart).format('DD MMM, ddd');
     order.timeText = moment(order.dateStart).format("HH:mm") + ' - ' + moment(order.dateEnd).format("HH:mm");
 
-    console.log(order.status);
-
     order.statusTexts = getBookingStatus(order.status);
     order.numGuests = order.numGuests + declOfNum(order.numGuests, [" гость", ' гостя', ' гостей']);
-
-    console.log(order);
 
     return order;
 }

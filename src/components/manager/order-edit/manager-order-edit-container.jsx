@@ -26,7 +26,7 @@ function defineTime() {
  *
  * @param props
  */
-export function defineOrderData(currentDate, orderInfo, tableId) {
+export function defineOrderData(activeDate, orderInfo, tableId) {
     //Если заказ существует
     if (orderInfo) {
         const dateStart = moment(orderInfo.dateStart);
@@ -50,7 +50,7 @@ export function defineOrderData(currentDate, orderInfo, tableId) {
             id: false,
             time: defineTime(),
             duration: 2,
-            date: currentDate,
+            date: activeDate,
             guests: 2,
             table: false,
             clientName: "",
@@ -175,7 +175,9 @@ export function convertDurationInHours(dateStart, dateEnd) {
 
 export function saveOrder(order, token, setAlert) {
 
-    let timecode = order.date;
+    let timecode = moment(order.date).format();
+
+
     timecode = timecode.replace('00:00:00', order.time + ":00");
 
     const duration = moment.duration(order.duration, 'h').toISOString();
@@ -207,8 +209,15 @@ export function saveOrder(order, token, setAlert) {
         alertText = "Столик забронирован";
     }
 
+
+    // console.log('send -> ',order);
+
     fetch(API_POINT + "/bookings", {method: 'post', body: JSON.stringify(body)})
-        .then(r => r.json()).then(json => setAlert(alertText));
+        .then(r => r.json()).then(json => {
+            console.log('save order res', json);
+            setAlert(alertText);
+        }
+    );
 }
 
 /**
