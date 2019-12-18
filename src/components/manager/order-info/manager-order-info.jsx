@@ -5,62 +5,94 @@ import {Link} from 'react-router-dom';
 import moment from "moment";
 import './manager-order-info.scss';
 import {deleteOrder, prepareBookingInfo} from "./manager-order-info-controller";
+import Preloader from "../../preloader";
+import {getBookingInfo} from "../utils/utils";
+import {BOOKING__SET_DATA} from "../../../constants/manager";
 
 function ManagerOrderInfo(props) {
-    const {orderId} = props.match.params;
+    console.log('props', props);
 
-    const bookingInfo = prepareBookingInfo(props.order, props.table, props.showDate, props.token);
+    const {bookingInfo} = props;
 
-    const isTwoButtons = bookingInfo.status.button ? '':' two-buttons';
+    //Если мы еще не получили данные из websocket (например когда обновили страницу)
+    if (Object.keys(props.bookingInfo).length === 0 && props.bookingInfo.constructor === Object) {
+        return <Preloader/>
+    } else {
+        // Если нет данных по текущему дню (данные из вэбсокета обновляются за 2 недели от текущего дня а мы запрашиваем данные по позавчерашнему дню)
+        if (bookingInfo[props.activeDate] === undefined) {
+            getBookingInfo(
+                props.activeDate, //Активная дата на dashboard
+                props.token, //token пользователя
+                props.updateBookingInfo // dispatcher redux'а
+            );
+            return <Preloader/>
+        } else {
+            const {orderId} = props.match.params;
 
+            const bookItem = bookingInfo[props.activeDate].filter(booking => booking.id === orderId)[0];
 
+            console.log('bookItem',bookItem);
 
+            const table = props.tablesList.filter(table => table.id === bookItem.tableID)[0];
 
-    return (
-        <div className={"order-info " + bookingInfo.status.statusClass}>
-            <div className="order-info__status">{bookingInfo.status.statusText}</div>
-            <div className="order-info__name">{bookingInfo.clientName}</div>
-            <div className="order-info__phone">{bookingInfo.clientPhone}</div>
-            <div className="order-info__count-guests">{bookingInfo.numGuests}</div>
-            <div className="order-info__date">{bookingInfo.dateText}</div>
-            <div className="order-info__time">{bookingInfo.timeText}</div>
-            <div className="order-info__table-number">{bookingInfo.tableNumber} столик</div>
-            <div className={"order-info__deposit " + bookingInfo.depositClass}>{bookingInfo.depositText}</div>
-            <div className={"order-info__footer-block " + isTwoButtons}>
-                <Link to={"/manager/order-edit/"+bookingInfo.tableId+"/" + orderId} className="order-info__btn">
-                    <div className="order-info__icon"><SvgEdit/></div>
-                    <div className="order-info__text">Изменить</div>
-                </Link>
+            console.log('table',table);
 
-                {bookingInfo.status.button}
+            const order = prepareBookingInfo(
+                bookItem, //текущая бронь
+                table, // информация по столу
+                props.currentDate,
+                props.token
+            );
 
-                <div className="order-info__btn">
-                    <div className="order-info__icon"><SvgDelete/></div>
-                    <div className="order-info__text" onClick={()=>deleteOrder(bookingInfo.id, props.token)}>Удалить</div>
+            const isTwoButtons = order.status.button ? '' : ' two-buttons';
+
+            return (
+                <div className={"order-info " + order.status.statusClass}>
+                    <div className="order-info__status">{order.status.statusText}</div>
+                    <div className="order-info__name">{order.clientName}</div>
+                    <div className="order-info__phone">{order.clientPhone}</div>
+                    <div className="order-info__count-guests">{order.numGuests}</div>
+                    <div className="order-info__date">{order.dateText}</div>
+                    <div className="order-info__time">{order.timeText}</div>
+                    <div className="order-info__table-number">{order.tableNumber} столик</div>
+                    <div className={"order-info__deposit " + order.depositClass}>{order.depositText}</div>
+                    <div className={"order-info__footer-block " + isTwoButtons}>
+                        <Link to={"/manager/order-edit/" + order.tableId + "/" + orderId} className="order-info__btn">
+                            <div className="order-info__icon"><SvgEdit/></div>
+                            <div className="order-info__text">Изменить</div>
+                        </Link>
+
+                        {order.status.button}
+
+                        <div className="order-info__btn">
+                            <div className="order-info__icon"><SvgDelete/></div>
+                            <div className="order-info__text" onClick={() => deleteOrder(order.id, props.token)}>Удалить</div>
+                        </div>
+                        <Link to="/manager/" className="order-info__back">Вернуться</Link>
+                    </div>
                 </div>
-                <Link to="/manager/" className="order-info__back">Вернуться</Link>
-            </div>
-        </div>
-    )
-
-
+            )
+        }
+    }
 }
 
-const mapStateToProps = (state , props) => {
-
-    const order = state.bookingInfo.itemsx[moment().format('YYYY-MM-DD')].filter(item => item.id=== props.match.params.orderId)[0];
-    let table = false;
-    if (order !== undefined){
-        table = state.info.tablesList.filter(table => table.id === order.tableID)[0];
-    }
+const mapStateToProps = (state, ownProps) => {
+    const activeDate = (ownProps.hasOwnProperty('match')) ? ownProps.match.params.date : moment().format('YYYY-MM-DD');
 
     return {
-        bookingInfo: state.bookingInfo.items,
-        showDate:state.showDate,
-        token:state.auth.token,
-        order,
-        table
+        activeDate: activeDate,
+        currentDate: state.showDate.currentDate,
+        bookingInfo: state.bookingInfo,
+        token: state.auth.token,
+        tablesList: state.info.tablesList
     }
 };
 
-export default connect(mapStateToProps, null)(ManagerOrderInfo);
+const mapDispatchToProps = dispatch => {
+    return {
+        updateBookingInfo: payload => dispatch({type: BOOKING__SET_DATA, payload})
+    }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManagerOrderInfo);

@@ -54,7 +54,7 @@ class ManagerWebsocket extends React.Component {
             // listen to data sent from the websocket server
             const message = JSON.parse(evt.data);
             // console.log('message',message);
-            if (message.items !== undefined ) this.props.setToRedux(message)
+            if (message.kind === "BookingStateMessage" ) this.props.setToRedux(message.itemsx)
         }
 
         // websocket onclose event listener

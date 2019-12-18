@@ -1,93 +1,66 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 
 import {Calendar, NewOrder, SearchButton, TableGrid} from "./manager-dashboard-views";
 
 import './manager-dashboard.scss';
-import {getActiveDayText, getTableGrid, updateActiveDate} from "./manager-dashboard-container";
-import {SHOW_DATE__SET} from "../../../constants/manager";
+import {getTableGrid} from "./manager-dashboard-container";
+import {BOOKING__SET_DATA, SHOW_DATE__SET} from "../../../constants/manager";
 import moment from "moment";
-import {API_POINT} from "../../../constants";
-import {isTokenWrong} from "../utils/utils";
+import {getBookingInfo} from "../utils/utils";
+import Preloader from "../../preloader";
 
 function ManagerDashboard(props) {
 
-    const [oldBookings, setOldBookings] = useState([]);
+    /**
+     * Если нет информации о бронировании и выбранный день меньше текущего рабогчего
+     * - запрашиваем данные о бронировании на сервере
+     */
+    if (props.bookingInfo === undefined) {
+        getBookingInfo(
+            props.activeDate, //Активная дата на dashboard
+            props.token, //token пользователя
+            props.updateBookingInfo // dispatcher redux'а
+        );
 
-    const {activeDate, currentDate} = props.showDate;
-    const isShowOldBookingInfo = moment(activeDate) < moment(currentDate);
+        return <Preloader/>
+    } else {
+        return (
+            <div>
+                <SearchButton/>
+                <Calendar
+                    activeDate={props.activeDate}
+                    currentDate={props.currentDate}
+                />
 
-    useEffect(
-        () => {
-            if (isShowOldBookingInfo) {
-
-                const storeKey = 'BookingInfo__' + activeDate;
-
-                const sessionInfo = sessionStorage.getItem(storeKey);
-
-                if (sessionInfo !== JSON.stringify(oldBookings)) {
-                    const body = {
-                        "method": "BookingList",
-                        "token": props.token,
-                        "timecode_from": activeDate,
-                        "timecode_to": moment(activeDate).add(1, 'd').format(),
-                    };
-
-                    fetch(API_POINT + '/bookings', {method: 'post', body: JSON.stringify(body)})
-                        .then(r => r.json()).then(json => {
-                        isTokenWrong(json);
-
-                        const date = moment(activeDate).format('YYYY-MM-DD');
-
-                        if (!json.error) {
-                            sessionStorage.setItem(storeKey, JSON.stringify(json.items[date]));
-                            setOldBookings(json.items[date]);
-
-                        }
-                    });
-                }
-
-            }
-        }
-    );
-
-    const bookingInfo = (isShowOldBookingInfo) ? oldBookings : props.bookingInfo;
-
-    return (
-        <div>
-            <SearchButton/>
-
-            <Calendar text={getActiveDayText(props.showDate)}
-                      changeDay={value => updateActiveDate(props.showDate, value, props.setDate)}/>
-
-            <TableGrid
-                items={getTableGrid(props, bookingInfo)}
-                bookingInfo={bookingInfo}
-            />
-            <NewOrder/>
-        </div>
-    )
+                <TableGrid
+                    items={getTableGrid(props)}
+                    activeDate={props.activeDate}
+                />
+                <NewOrder/>
+            </div>
+        )
+    }
 }
 
-const mapStateToProps = (state /*, ownProps*/) => {
-
-    const {activeDate} = state.showDate;
-
-    let bookingInfo = state.bookingInfo.itemsx[moment(activeDate).format('YYYY-MM-DD')] || [];
+const mapStateToProps = (state, ownProps) => {
+    const activeDate = (ownProps.hasOwnProperty('match')) ? ownProps.match.params.date : moment().format('YYYY-MM-DD');
 
     return {
-        bookingInfo: bookingInfo,
-        bookingInterval: state.info.companyInfo.bookingInterval,
-        tablesList: state.info.tablesList,
-        workTime: state.info.companyInfo.workdays[moment(activeDate).format('e')],
-        showDate: state.showDate,
-        token: state.auth.token,
+        activeDate: activeDate, // Активная дата на dashboard
+        currentDate: state.showDate.currentDate, // Текущая дата работы заведения
+        bookingInfo: state.bookingInfo[activeDate], // Список брони на активную дату
+        tablesList: state.info.tablesList, // Список столов заведения
+        bookingInterval: state.info.companyInfo.bookingInterval, //Интервал бронирования
+        token: state.auth.token, //Токен пользователя
+        workTime: state.info.companyInfo.workdays, // Режим работы заведения
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         setDate: payload => dispatch({type: SHOW_DATE__SET, payload}),
+        updateBookingInfo: payload => dispatch({type: BOOKING__SET_DATA, payload})
     }
 };
 

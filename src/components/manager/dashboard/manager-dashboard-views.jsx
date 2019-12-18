@@ -1,6 +1,7 @@
 import React from 'react';
 import {SvgCalendar, SvgGuest, SvgLeftAngle, SvgRightAngle, SvgSearch} from "../../../assets/svg";
 import {Link} from "react-router-dom";
+import moment from "moment";
 
 export function SearchButton() {
     return (
@@ -12,18 +13,27 @@ export function SearchButton() {
 }
 
 export function Calendar(props) {
+    const m = moment(props.activeDate);
+    const prevLink = '/manager/dashboard/' + m.clone().add(-1, 'd').format('YYYY-MM-DD') + '/';
+    const nextLink = '/manager/dashboard/' + m.clone().add(1, 'd').format('YYYY-MM-DD') + '/';
+
+    let dayText = '';
+
+    dayText += (m.format() === props.currentDate) ? 'Сегодня • ' : '';
+    dayText += m.format('DD MMM, ddd');
+
     return (
         <div className="calendar">
-            <div className="calendar__button" onClick={() => props.changeDay(-1)}>
+            <Link to={prevLink} className="calendar__button">
                 <div className="calendar__icon"><SvgLeftAngle/></div>
-            </div>
+            </Link>
             <div className="calendar__body">
-                <div className="calendar__text">{props.text}</div>
+                <div className="calendar__text">{dayText}</div>
                 <div className="calendar__icon"><SvgCalendar/></div>
             </div>
-            <div className="calendar__button" onClick={() => props.changeDay(1)}>
+            <Link to={nextLink} className="calendar__button">
                 <div className="calendar__icon"><SvgRightAngle/></div>
-            </div>
+            </Link>
         </div>
     )
 }
@@ -41,7 +51,7 @@ export function TableGrid(props) {
             {/*</thead>*/}
             <tbody>
             {
-                props.items.map(item => <TableGridRow key={item.tableId} {...item}/>)
+                props.items.map(item => <TableGridRow key={item.tableId} activeDate={props.activeDate} {...item}/>)
             }
             </tbody>
         </table>
@@ -53,7 +63,7 @@ export function TableGridRow(props) {
     const cells = [];
 
     for (let cellId in props.cells) {
-        cells.push(<TableGridCell key={cellId} {...props.cells[cellId]}/>);
+        cells.push(<TableGridCell key={cellId} activeDate={props.activeDate} {...props.cells[cellId]}/>);
     }
 
     return (
@@ -68,33 +78,29 @@ export function TableGridCell(props) {
 
     const info = {};
 
-
     info.colSpan = (props.gridSpan !== undefined) ? props.gridSpan : 1;
 
-
     if (props.bookingInfo !== undefined) {
-
         // TODO Артур что-то нахимичил со статусами. ставим пока костыль, блин
         if (props.bookingInfo.status.status !== undefined) props.bookingInfo.status = props.bookingInfo.status.status;
 
         switch (props.bookingInfo.status) {
             case 'booked':
-                info.statusClass='status--booked';
+                info.statusClass = 'status--booked';
                 break;
             case 'locked':
-                info.statusClass='status--locked';
+                info.statusClass = 'status--locked';
                 break;
             case 'arrived':
-                info.statusClass='status--arrived';
+                info.statusClass = 'status--arrived';
                 break;
             default:
-
-
         }
 
         info.bookedText = props.bookingInfo.numGuests;
 
-        info.body = <Link to={"/manager/order-info/" + props.bookingInfo.id} className={"gantt " + info.statusClass}>
+        info.body = <Link to={"/manager/order-info/" + props.activeDate + "/" + props.bookingInfo.id}
+                          className={"gantt " + info.statusClass}>
             <div className="gantt__icon"><SvgGuest/></div>
             <div className="gantt__text">{info.bookedText}</div>
         </Link>

@@ -1,3 +1,6 @@
+import moment from "moment";
+import {API_POINT} from "../../../constants";
+
 /**
  * Статусы бронирования заказа
  *
@@ -50,11 +53,39 @@ export const declOfNum = (number, titles) => {
 
 /** Проверяем не мертвый ли токен, если да - удаляем данные из sessionStorage и перегружаем страницу*/
 export function isTokenWrong(json) {
-
-    console.log(json.error)
-
     if (json.error && json.error_message === 'Wrong token. Get a new one.') {
         sessionStorage.removeItem('token');
         window.location.reload();
     }
 }
+
+/**
+ * Немного оберки над fetch
+ *
+ * @param url
+ * @param body
+ * @return {Promise<Response>}
+ */
+export function toFetch(url, body) {
+    return fetch(url, {method: 'post', body: JSON.stringify(body)});
+}
+
+export function getBookingInfo(time, token, reduxDispatcher) {
+    const body = {
+        method: "BookingList",
+        token,
+        timecode_from: moment(time).format(),
+        timecode_to: moment(time).add(1, 'd').format(),
+    };
+
+    toFetch(API_POINT + '/bookings', body)
+        .then(r => r.json())
+        .then(json => {
+            if (json.error) {
+                console.error(json.error_message);
+            } else {
+                reduxDispatcher(json.items);
+            }
+        });
+}
+
