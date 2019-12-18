@@ -1,6 +1,4 @@
 import moment from "moment";
-import {API_POINT} from "../../../constants";
-import {toFetch} from "../utils/utils";
 
 /**
  *

@@ -7,7 +7,7 @@ import './manager-order-info.scss';
 import {deleteOrder, prepareBookingInfo} from "./manager-order-info-controller";
 import Preloader from "../../preloader";
 import {getBookingInfo} from "../utils/utils";
-import {BOOKING__SET_DATA, SHOW_DATE__SET} from "../../../constants/manager";
+import {BOOKING__SET_DATA} from "../../../constants/manager";
 
 function ManagerOrderInfo(props) {
     console.log('props', props);
