@@ -3,9 +3,9 @@ import {SvgCalendar, SvgGuest, SvgLeftAngle, SvgRightAngle, SvgSearch} from "../
 import {Link} from "react-router-dom";
 import moment from "moment";
 
-export function SearchButton() {
+export function SearchButton(props) {
     return (
-        <Link to="/manager/search/" className="search-button">
+        <Link to={"/manager/search/"+props.activeDate + '/'} className="search-button">
             <div className="search-button__icon"><SvgSearch/></div>
             <div className="search-button__text">Поиск брони</div>
         </Link>

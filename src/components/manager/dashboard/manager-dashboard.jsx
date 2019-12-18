@@ -27,7 +27,10 @@ function ManagerDashboard(props) {
     } else {
         return (
             <div>
-                <SearchButton/>
+                <SearchButton
+                    activeDate={props.activeDate}
+                />
+
                 <Calendar
                     activeDate={props.activeDate}
                     currentDate={props.currentDate}
