@@ -15,7 +15,7 @@ export default function ManagerRouter() {
                 <Route path="/manager/order-edit/:tableId/:orderId/" component={ManagerOrderEdit} />
                 <Route path="/manager/order-edit/" component={ManagerOrderEdit} />
                 <Route path="/manager/dashboard/:date/" component={ManagerDashboard}/>
-                <Route path="/manager/" component={ManagerDashboard}/>
+                <Route path="/manager/"><ManagerDashboard/></Route>
             </Switch>
         </Router>
     )

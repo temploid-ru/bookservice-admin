@@ -49,6 +49,8 @@ function ManagerDashboard(props) {
 const mapStateToProps = (state, ownProps) => {
     const activeDate = (ownProps.hasOwnProperty('match')) ? ownProps.match.params.date : moment().format('YYYY-MM-DD');
 
+    console.log('activeDate',activeDate);
+
     return {
         activeDate: activeDate, // Активная дата на dashboard
         currentDate: state.showDate.currentDate, // Текущая дата работы заведения
