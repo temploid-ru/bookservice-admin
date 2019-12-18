@@ -40,7 +40,9 @@ function ManagerDashboard(props) {
                     items={getTableGrid(props)}
                     activeDate={props.activeDate}
                 />
-                <NewOrder/>
+                <NewOrder
+                    activeDate={props.activeDate}
+                />
             </div>
         )
     }
@@ -48,8 +50,6 @@ function ManagerDashboard(props) {
 
 const mapStateToProps = (state, ownProps) => {
     const activeDate = (ownProps.hasOwnProperty('match')) ? ownProps.match.params.date : moment().format('YYYY-MM-DD');
-
-    console.log('activeDate',activeDate);
 
     return {
         activeDate: activeDate, // Активная дата на dashboard

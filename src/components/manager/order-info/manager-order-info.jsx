@@ -1,13 +1,14 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {SvgDelete, SvgEdit} from "../../../assets/svg";
 import {Link} from 'react-router-dom';
 import moment from "moment";
 import './manager-order-info.scss';
-import {deleteOrder, prepareBookingInfo} from "./manager-order-info-controller";
+
+import {prepareBookingInfo} from "./manager-order-info-controller";
 import Preloader from "../../preloader";
 import {getBookingInfo} from "../utils/utils";
 import {BOOKING__SET_DATA} from "../../../constants/manager";
+import {ManagerOrderInfoButtons} from "./manager-order-info-view";
 
 function ManagerOrderInfo(props) {
     console.log('props', props);
@@ -31,11 +32,7 @@ function ManagerOrderInfo(props) {
 
             const bookItem = bookingInfo[props.activeDate].filter(booking => booking.id === orderId)[0];
 
-            console.log('bookItem',bookItem);
-
             const table = props.tablesList.filter(table => table.id === bookItem.tableID)[0];
-
-            console.log('table',table);
 
             const order = prepareBookingInfo(
                 bookItem, //текущая бронь
@@ -44,11 +41,9 @@ function ManagerOrderInfo(props) {
                 props.token
             );
 
-            const isTwoButtons = order.status.button ? '' : ' two-buttons';
-
             return (
-                <div className={"order-info " + order.status.statusClass}>
-                    <div className="order-info__status">{order.status.statusText}</div>
+                <div className={"order-info " + order.statusTexts.statusClass}>
+                    <div className="order-info__status">{order.statusTexts.statusText}</div>
                     <div className="order-info__name">{order.clientName}</div>
                     <div className="order-info__phone">{order.clientPhone}</div>
                     <div className="order-info__count-guests">{order.numGuests}</div>
@@ -56,20 +51,18 @@ function ManagerOrderInfo(props) {
                     <div className="order-info__time">{order.timeText}</div>
                     <div className="order-info__table-number">{order.tableNumber} столик</div>
                     <div className={"order-info__deposit " + order.depositClass}>{order.depositText}</div>
-                    <div className={"order-info__footer-block " + isTwoButtons}>
-                        <Link to={"/manager/order-edit/" + order.tableId + "/" + orderId} className="order-info__btn">
-                            <div className="order-info__icon"><SvgEdit/></div>
-                            <div className="order-info__text">Изменить</div>
-                        </Link>
 
-                        {order.status.button}
+                    <ManagerOrderInfoButtons
+                        activeDate={props.activeDate}
+                        currentDate={props.currentDate}
+                        props={table.id}
+                        orderId={orderId}
+                        nextStatus={order.statusTexts.nextStatus}
+                        token={props.token}
+                        buttonText={order.statusTexts.buttonText}
+                    />
 
-                        <div className="order-info__btn">
-                            <div className="order-info__icon"><SvgDelete/></div>
-                            <div className="order-info__text" onClick={() => deleteOrder(order.id, props.token)}>Удалить</div>
-                        </div>
-                        <Link to="/manager/" className="order-info__back">Вернуться</Link>
-                    </div>
+                    <Link to="/manager/" className="order-info__back">Вернуться</Link>
                 </div>
             )
         }

@@ -28,7 +28,7 @@ export const getBookingStatus = (status) => {
         case 'arrived':
             return {
                 status: 'arrived',
-                nextStatus: 'locked',
+                nextStatus: false,
                 statusClass: 'is-arrived',
                 statusText: 'Гость на месте',
                 buttonText: false,

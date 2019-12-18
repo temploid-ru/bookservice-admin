@@ -36,7 +36,7 @@ export function defineOrderData(currentDate, orderInfo, tableId) {
             id: orderInfo.id,
             time: dateStart.format('HH:mm'),
             duration: dateEnd.diff(dateStart, 'h'),
-            date: dateStart.clone.startOf('day').format(),
+            date: dateStart.clone().startOf('day').format(),
             guests: orderInfo.numGuests,
             table: tableId,
             clientName: orderInfo.clientName,

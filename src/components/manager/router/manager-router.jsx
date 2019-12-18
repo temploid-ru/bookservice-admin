@@ -12,7 +12,7 @@ export default function ManagerRouter() {
                 <Route path="/manager/order-info/:date/:orderId/" component={ManagerOrderInfo} />
                 <Route path="/manager/search/:date/" component={ManagerSearch}/>
                 <Route path="/manager/search/" component={ManagerSearch}/>
-                <Route path="/manager/order-edit/:tableId/:orderId/" component={ManagerOrderEdit} />
+                <Route path="/manager/order-edit/:date/:tableId/:orderId/" component={ManagerOrderEdit} />
                 <Route path="/manager/order-edit/" component={ManagerOrderEdit} />
                 <Route path="/manager/dashboard/:date/" component={ManagerDashboard}/>
                 <Route path="/manager/"><ManagerDashboard/></Route>

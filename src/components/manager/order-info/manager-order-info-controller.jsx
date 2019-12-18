@@ -37,21 +37,12 @@ export function prepareBookingInfo(order, table, currentDate, token) {
     order.dateText += moment(order.dateStart).format('DD MMM, ddd');
     order.timeText = moment(order.dateStart).format("HH:mm") + ' - ' + moment(order.dateEnd).format("HH:mm");
 
-    order.status = getBookingStatus(order.status);
+    console.log(order.status);
+
+    order.statusTexts = getBookingStatus(order.status);
     order.numGuests = order.numGuests + declOfNum(order.numGuests, [" гость", ' гостя', ' гостей']);
 
-
-    console.log('order.status.buttonText', order.status.buttonText);
-
-    if (order.status.buttonText) {
-        order.status.button = <div className="order-info__btn order-info__status-color"
-                                   onClick={() => updateState(order.id, order.status.nextStatus, token)}>
-            <div className="order-info__icon"><SvgOk/></div>
-            <div className="order-info__text">{order.status.buttonText}</div>
-        </div>
-    } else {
-        order.status.button = null;
-    }
+    console.log(order);
 
     return order;
 }

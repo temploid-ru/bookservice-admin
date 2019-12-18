@@ -27,11 +27,13 @@ function ManagerOrderEdit(props) {
     // Текущая бронь
     const [order, setOrder] = useState(
         defineOrderData(
-            props.showDate.currentDate,
+            props.activeDate,
             props.bookingInfo,
             props.tableId
         )
     );
+
+    console.log(order);
 
     const tablesList = generateTablesList(order, props.tablesList, props.bookingInfo);
 

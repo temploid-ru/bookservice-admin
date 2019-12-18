@@ -113,10 +113,10 @@ export function TableGridCell(props) {
     )
 }
 
-export function NewOrder() {
+export function NewOrder(props) {
     return (
         <div className="new-order">
-            <Link to={"/manager/order-edit/"} className="new-order__button"/>
+            <Link to={"/manager/order-edit/" +props.activeDate +"/"} className="new-order__button"/>
         </div>
     )
 }

@@ -84,19 +84,21 @@
   &__footer-block {
     position: fixed;
     left: 0;
-    bottom: 0;
+    bottom: 106px;
     width: 100%;
-    height: 190px;
+    height: 70px;
     display: grid;
     grid-gap: 51px 11px;
     background-color: white;
     padding: 15px;
     z-index: 1;
 
-    grid-template-columns: repeat(3,1fr);
-
-    &.two-buttons {
+    &.grid-2 {
       grid-template-columns: repeat(2,1fr);
+    }
+
+    &.grid-3 {
+      grid-template-columns: repeat(3,1fr);
     }
   }
 
@@ -147,12 +149,15 @@
   }
 
   &__back {
-    grid-column: 1/4;
     text-align: center;
     text-decoration: none;
     font-weight: 500;
     font-size: 15px;
     line-height: 18px;
     color: #000000;
+    position: fixed;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
