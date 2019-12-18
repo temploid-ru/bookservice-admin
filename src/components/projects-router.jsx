@@ -4,6 +4,9 @@ import Admin from "./admin";
 import Manager from "./manager";
 
 export default function ProjectsRouter() {
+
+    console.log('git prod test');
+
     return (<Router>
         <Switch>
             <Route path="/manager/" ><Manager/></Route>
