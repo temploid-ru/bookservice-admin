@@ -49,7 +49,7 @@ export default function OrderTablesList(props) {
                         />
                     </div>
 
-                    <div onClick={() => props.toBack()} className="order-tables-list__back">back</div>
+                    <div onClick={() => props.toBack()} className="order-tables-list__back">Отмена</div>
                 </div>
             )
     }

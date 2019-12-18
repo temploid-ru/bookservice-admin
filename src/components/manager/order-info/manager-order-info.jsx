@@ -61,7 +61,7 @@ function ManagerOrderInfo(props) {
                         buttonText={order.statusTexts.buttonText}
                     />
 
-                    <Link to="/manager/" className="order-info__back">Вернуться</Link>
+                    <Link to={"/manager/" + props.activeDate + "/"} className="order-info__back">Вернуться</Link>
                 </div>
             )
         }

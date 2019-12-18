@@ -46,6 +46,14 @@
     padding: 16px 0;
     text-align: center;
 
+    &:hover:not(.is-active) {
+      background-color: $primary-color;
+      color: white;
+    }
+
+    &:not(.is-active) {
+      cursor: pointer;
+    }
 
     &.is-active {
       border-color: black;
@@ -70,6 +78,15 @@
     font-size: 15px;
     line-height: 18px;
     color: #6A6A6A;
+
+    &:hover:not(.is-active) {
+      background-color: $primary-color;
+      color: white;
+    }
+
+    &:not(.is-active) {
+      cursor: pointer;
+    }
 
     &.is-active {
       color: black;
@@ -98,6 +115,18 @@
     grid-template-columns: auto 1fr auto;
     grid-gap: 26px;
     padding: 0 15px 0 20px;
+
+    &:hover:not(.is-active) {
+      background-color: $primary-color;
+
+      > * {
+        color: white;
+      }
+    }
+
+    &:not(.is-active) {
+      cursor: pointer;
+    }
 
     &:not(:last-child){
       margin-bottom: 10px;
