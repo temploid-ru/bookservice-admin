@@ -9,10 +9,11 @@ export default function ManagerRouter() {
     return (
         <Router>
             <Switch>
-                <Route path="/manager/order-info/:orderId/" component={ManagerOrderInfo} />
+                <Route path="/manager/order-info/:date/:orderId/" component={ManagerOrderInfo} />
                 <Route path="/manager/search/"><ManagerSearch/></Route>
                 <Route path="/manager/order-edit/:tableId/:orderId/" component={ManagerOrderEdit} />
                 <Route path="/manager/order-edit/" component={ManagerOrderEdit} />
+                <Route path="/manager/dashboard/:date/" component={ManagerDashboard}/>
                 <Route path="/manager/"><ManagerDashboard/></Route>
             </Switch>
         </Router>

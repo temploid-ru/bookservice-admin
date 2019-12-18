@@ -1,38 +1,28 @@
 import moment from "moment";
+import {API_POINT} from "../../../constants";
+import {toFetch} from "../utils/utils";
 
 /**
- * Формируем массив сетки
  *
- *     const grid = [
- {
-            tableId: '',
-            tableName: '',
-            tableNumber: "",
-            cells: [
-                {orderId: '',
-                }
-            ]
-        }
- ];
+ * Фабрика по формированию сетки
  *
  * @return {{}}
  */
 
-export function getTableGrid(props, bookingInfo) {
+export function getTableGrid(props) {
     const result = [];
 
-    const {workTime, showDate} = props;
-
-    const workTimeLine = generateWorkTimeGrid(workTime, showDate, props.bookingInterval);
+    // Получаем сетку бронирования для одлного стола
+    const workTimeLine = generateWorkTimeGrid(
+        props.workTime[moment(props.activeDate).format('e')], // Время работы в текущий день недели
+        props.activeDate, // Текущий день на dashboard
+        props.bookingInterval // Интервал бронирования
+    );
 
     for (let table of props.tablesList) {
 
-        const orderItems = bookingInfo.filter(item => item.tableID === table.id);
+        const orderItems = props.bookingInfo.filter(item => item.tableID === table.id);
 
-
-        //TODO разобраться почему не копируется а заменяется объект потому пока костыль
-        // let timeline = {...workTimeLine, id:table.id};
-        // const timeline = Object.assign({'id':table.id},workTimeLine);
         const timeline = JSON.parse(workTimeLine);
 
         for (let booking of orderItems) {
@@ -65,7 +55,6 @@ export function getTableGrid(props, bookingInfo) {
         };
 
         result.push({...gridItem});
-
     }
 
     return result;
@@ -74,27 +63,36 @@ export function getTableGrid(props, bookingInfo) {
 /**
  * Генерируем сетку времени
  *
- * @param startTime
- * @param endTime
- * @param gridStep
- * @returns {[]}
+ * @returns {string} = stringify object с данными
+ *
+ * @param workTime - объект времени работы заведения
+ * @param activeDate - текущий день
+ * @param bookingInterval - шаг бронирования
  */
-export function generateWorkTimeGrid(workTime, showTime, gridStep) {
+export function generateWorkTimeGrid(workTime, activeDate,  bookingInterval) {
 
-    const result = {};
+    const sessonStorageKey = 'generateWorkTimeGrid_' + workTime.weekday + '_' + bookingInterval;
 
-    let time = moment(showTime.activeDate).add(workTime.start_time, 's');
-    const endWorkDate = moment(showTime.activeDate).add(workTime.end_time, 's');
+    let result = sessionStorage.getItem(sessonStorageKey);
 
-    while (time < endWorkDate) {
-        const timeStamp = +time.format('x');
-        result[timeStamp] = {timeStamp, V: time.format()};
+    if (result === null) {
+        result = {};
 
-        time.add(gridStep, 's');
+        let time = moment(activeDate).add(workTime.start_time, 's');
+        const endWorkDate = moment(activeDate).add(workTime.end_time, 's');
+
+        while (time < endWorkDate) {
+            const timeStamp = +time.format('x');
+            result[timeStamp] = {timeStamp, V: time.format()};
+
+            time.add(bookingInterval, 's');
+        }
+
+        result = JSON.stringify(result);
     }
-    return JSON.stringify(result);
-}
 
+    return result;
+}
 
 export const getActiveDayText = (showDate) => {
     let result = '';
